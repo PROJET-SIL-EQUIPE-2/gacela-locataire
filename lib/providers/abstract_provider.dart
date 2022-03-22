@@ -14,7 +14,7 @@ class AbstractProvider with ChangeNotifier {
 
   Failure? _failure;
   Failure? get failure => _failure;
-  void setProviderFailure(Failure failure) {
+  void setProviderFailure(Failure? failure) {
     _failure = failure;
     notifyListeners();
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gacela_locataire/views/screens/auth/login_screen.dart';
+import 'package:gacela_locataire/providers/auth_provider.dart';
+import '../screens.dart';
 import 'package:provider/provider.dart';
 
 class Wrapper extends StatelessWidget {
@@ -8,9 +9,17 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, auth, _) {
-      // TODO: Decide if show LoginScreen or HomeScreen => It depends on the user status
-      return const LoginScreen();
+    return Consumer<AuthProvider>(builder: (context, auth, _) {
+      if (auth.isAuth) {
+        return const HomeScreen();
+      } else {
+        return FutureBuilder(
+            future: auth.tryAutoLogin(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const SplashScreen();
+              return const LoginScreen();
+            });
+      }
     });
   }
 }

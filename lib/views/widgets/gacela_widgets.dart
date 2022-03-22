@@ -160,8 +160,8 @@ Widget gacelaCircleButton({
           boxShadow: [
             BoxShadow(
               offset: const Offset(0, 3),
-              blurRadius: 45,
-              color: Colors.black.withOpacity(0.31),
+              blurRadius: 10,
+              color: Colors.black.withOpacity(0.1),
             ),
           ],
         ),
@@ -175,7 +175,7 @@ Widget gacelaTextButton({
   required String text,
   Color? color = GacelaColors.gacelaDeepBlue,
   required void Function()? onPressed,
-  required Icon icon, // change it to an svg ?! IDK
+  required Icon? icon, // change it to an svg ?! IDK
 }) =>
     TextButton(
       onPressed: onPressed,
@@ -192,7 +192,51 @@ Widget gacelaTextButton({
               fontWeight: FontWeight.w700,
             ),
           ),
-          icon,
+          if (icon != null) icon,
+        ],
+      ),
+    );
+
+Widget gacelaErrorText({required String text}) => Container(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        color: GacelaColors.gacelaRed,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.error_outline,
+            color: Colors.white,
+          ),
+          Text(
+            text,
+            style: const TextStyle(color: Colors.white),
+          )
+        ],
+      ),
+    );
+
+Widget gacelaSuccessText({required String text}) => Container(
+      padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        color: GacelaColors.gacelaBlue,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.check,
+            color: Colors.white,
+          ),
+          Text(
+            text,
+            style: const TextStyle(color: Colors.white),
+          )
         ],
       ),
     );

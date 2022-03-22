@@ -4,8 +4,10 @@ import 'colors.dart';
 class GacelaTheme {
   static const double hPadding = 20.0;
   static const double vPadding = 18.0;
+  static const double vDivider = 20.0;
   static ThemeData gacelaTheme = ThemeData(
     fontFamily: 'Poppins',
+    scaffoldBackgroundColor: Colors.white,
     colorScheme: const ColorScheme.light(
       primary: GacelaColors.gacelaBlue,
       secondary: GacelaColors.gacelaOrange,
@@ -15,10 +17,12 @@ class GacelaTheme {
       headline1: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.w600,
+        color: Colors.black,
       ),
       headline2: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w600,
+        color: Colors.black,
       ),
       headline3: TextStyle(
         fontSize: 19,

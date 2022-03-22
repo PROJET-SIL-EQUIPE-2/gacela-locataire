@@ -11,11 +11,11 @@ class LocalStorageService {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final body = {
-        "karini_token": token,
+        "gacela_token": token,
         "user_id": userId.toString(),
       };
       await prefs.setString(
-        "KariniUserData",
+        "gacela_user",
         json.encode(body),
       );
       return true;
@@ -26,9 +26,23 @@ class LocalStorageService {
   }
 
   /// Get user info from the localstorage
-  /// return
-  Future<Map<String, dynamic>?> getUser() async {
-    // TODO: Implemant get User function
-    throw UnimplementedError();
+  /// return User data from localstorage else null
+  static Future<Map<String, dynamic>?> getUser() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final userAsString = prefs.getString("gacela_user");
+      if (userAsString == null) return null;
+      final userData = json.decode(userAsString);
+      return userData;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  static clearLocalStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }
