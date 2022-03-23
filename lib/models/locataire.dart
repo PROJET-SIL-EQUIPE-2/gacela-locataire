@@ -1,43 +1,44 @@
 import 'dart:convert';
 
-/**
- * FIXME:
- * Not completed
- * Just an exemple of the Locataire model
- */
-
 Locataire locataireFromJson(String str) => Locataire.fromJson(json.decode(str));
-
-String locataireToJson(Locataire data) => json.encode(data.toJson());
 
 class Locataire {
   Locataire({
     this.id,
     this.email,
-    this.nom,
-    this.prenom,
-    this.birthday,
+    this.phoneNumber,
+    this.name,
+    this.familyName,
+    this.validated,
+    this.personalPhoto,
+    this.photoIdentity,
   });
 
-  late final int? id;
-  final String? email;
-  final String? nom;
-  final String? prenom;
-  final DateTime? birthday;
+  int? id;
+  String? email;
+  String? phoneNumber;
+  String? name;
+  String? familyName;
+  bool? validated;
+  dynamic personalPhoto;
+  dynamic photoIdentity;
 
   factory Locataire.fromJson(Map<String, dynamic> json) => Locataire(
         id: json["data"]["id"],
         email: json["data"]["email"],
-        nom: json["data"]["nom"],
-        prenom: json["data"]["prenom"],
-        birthday: json["data"]["birthday"],
+        phoneNumber: json["data"]["phone_number"],
+        name: json["data"]["name"],
+        familyName: json["data"]["family_name"],
+        validated: json["data"]["validated"],
+        personalPhoto: json["data"]["personal_photo"],
+        photoIdentity: json["data"]["photo_identity"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "email": email,
-        "nom": nom,
-        "prenom": prenom,
-        "birthday": birthday,
+  Map<String, String> toJson(String? password) => {
+        "email": email.toString(),
+        "phone_number": phoneNumber.toString(),
+        "name": name.toString(),
+        "family_name": familyName.toString(),
+        "password": password.toString(),
       };
 }

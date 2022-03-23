@@ -72,6 +72,7 @@ Widget gacelaTextFormField({
   double radius = 20,
   EdgeInsetsGeometry? padding,
   int? maxLength,
+  String? value,
 }) =>
     TextFormField(
       maxLength: maxLength,
@@ -91,6 +92,7 @@ Widget gacelaTextFormField({
       keyboardType: keyboardType,
       validator: validator,
       onSaved: onSaved,
+      initialValue: value,
     );
 
 // Use it outside forms
@@ -211,9 +213,11 @@ Widget gacelaErrorText({required String text}) => Container(
             Icons.error_outline,
             color: Colors.white,
           ),
-          Text(
-            text,
-            style: const TextStyle(color: Colors.white),
+          Flexible(
+            child: Text(
+              text,
+              style: const TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),

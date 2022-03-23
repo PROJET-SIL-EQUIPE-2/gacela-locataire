@@ -55,9 +55,22 @@ class AuthProvider extends AbstractProvider {
     setProviderState(NotifierState.loaded);
   }
 
-  Future<void> signup(Locataire? locataire) async {
-    // TODO:
-    throw UnimplementedError("Signup not implemanted");
+  Future<bool?> register(Locataire? locataire, String? password) async {
+    setProviderFailure(null);
+    final AuthService authService = AuthService();
+    // set the state to loading => show progress
+    setProviderState(NotifierState.loading);
+    try {
+      // get the data
+      final Map<String, dynamic>? data =
+          await authService.register(locataire, password);
+      setProviderState(NotifierState.loaded);
+      return true;
+    } on Failure catch (f) {
+      // error case
+      setProviderFailure(f);
+      setProviderState(NotifierState.loaded);
+    }
   }
 
   Future<bool> tryAutoLogin() async {

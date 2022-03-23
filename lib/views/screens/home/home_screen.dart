@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gacela_locataire/config/theme/theme.dart';
 import 'package:gacela_locataire/models/services/localstorage_service.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:gacela_locataire/views/widgets.dart';
@@ -11,17 +12,23 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-              child: gacelaButton(
-                  text: "Logout",
-                  onPressed: () async {
-                    await Provider.of<AuthProvider>(context, listen: false)
-                        .logout();
-                  })),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: GacelaTheme.hPadding),
+        child: Consumer<AuthProvider>(
+          builder: (ctx, auth, _) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Current User id = ${auth.user?.id}"),
+              Center(
+                  child: gacelaButton(
+                      text: "Logout",
+                      onPressed: () async {
+                        await Provider.of<AuthProvider>(context, listen: false)
+                            .logout();
+                      })),
+            ],
+          ),
+        ),
       ),
     );
   }

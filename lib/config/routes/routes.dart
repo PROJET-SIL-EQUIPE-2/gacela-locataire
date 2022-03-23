@@ -9,5 +9,6 @@ class Routes {
     RegisterScreen.route: (_) => const RegisterScreen(),
     IntroScreen.route: (_) => const IntroScreen(),
     ResetPasswordScreen.route: (_) => const ResetPasswordScreen(),
+    ThanksScreen.route: (_) => const ThanksScreen(),
   };
 }
