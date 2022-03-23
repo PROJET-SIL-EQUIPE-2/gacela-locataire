@@ -233,9 +233,12 @@ Widget gacelaSuccessText({required String text}) => Container(
             Icons.check,
             color: Colors.white,
           ),
-          Text(
-            text,
-            style: const TextStyle(color: Colors.white),
+          Flexible(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),
