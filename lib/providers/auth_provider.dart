@@ -64,7 +64,6 @@ class AuthProvider extends AbstractProvider {
       // get the data
       final Map<String, dynamic>? data =
           await authService.register(locataire, password);
-      setProviderState(NotifierState.loaded);
       return true;
     } on Failure catch (f) {
       // error case

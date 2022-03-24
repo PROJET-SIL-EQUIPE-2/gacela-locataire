@@ -18,7 +18,7 @@ void main() async {
     final password = find.widgetWithText(TextFormField, 'Mot de passe');
     final button = find.widgetWithText(GestureDetector, 'Connexion');
     await tester.enterText(email, 'in_fatmi@esi.dz');
-    await tester.enterText(password, '12345678');
+    await tester.enterText(password, 'resetreset');
     await tester.tap(button);
     await tester.pump();
     final icon = find.byIcon(Icons.error_outline);
