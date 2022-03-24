@@ -228,7 +228,7 @@ Widget gacelaSuccessText({required String text}) => Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        color: GacelaColors.gacelaBlue,
+        color: GacelaColors.gacelaGreen,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

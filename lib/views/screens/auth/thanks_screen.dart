@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gacela_locataire/config/theme/theme.dart';
-import 'package:gacela_locataire/models/notifier_state.dart';
-import 'package:gacela_locataire/providers/auth_provider.dart';
-import 'package:gacela_locataire/views/screens/auth/login_screen.dart';
-import 'package:gacela_locataire/views/widgets/gacela_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../config/theme/theme.dart';
+import '../../../models/notifier_state.dart';
+import '../../../providers/auth_provider.dart';
+import '../../widgets.dart';
+import '../../screens.dart';
 
 class ThanksScreen extends StatelessWidget {
   static const route = "/thanks";

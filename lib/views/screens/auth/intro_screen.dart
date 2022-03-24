@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gacela_locataire/config/theme/colors.dart';
-import 'package:gacela_locataire/config/theme/theme.dart';
-import 'package:gacela_locataire/views/widgets.dart';
+
+import '../../../config/theme/colors.dart';
+import '../../../config/theme/theme.dart';
+import '../../widgets.dart';
 
 class IntroScreen extends StatefulWidget {
   static const route = "/intro";
@@ -27,7 +28,6 @@ class _IntroScreenState extends State<IntroScreen> {
                 MediaQuery.of(context).padding.top,
             child: Column(
               children: [
-
                 SvgPicture.asset(
                   'assets/icons/logo.svg',
                   height: MediaQuery.of(context).size.width * 0.5,
@@ -54,14 +54,14 @@ class _IntroScreenState extends State<IntroScreen> {
                       .copyWith(wordSpacing: 2),
                   textAlign: TextAlign.center,
                 ),
-                const  SizedBox(
+                const SizedBox(
                   height: GacelaTheme.vDivider * 2,
                 ),
                 gacelaButton(onPressed: () {}, text: 'Connexion'),
-                const  SizedBox(
+                const SizedBox(
                   height: GacelaTheme.vDivider * 3,
                 ),
-                const  Text(
+                const Text(
                   'Vous ne possédez pas de compte',
                 ),
                 gacelaLinkButton(

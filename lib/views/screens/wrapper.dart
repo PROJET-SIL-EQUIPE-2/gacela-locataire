@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gacela_locataire/providers/auth_provider.dart';
-import '../screens.dart';
 import 'package:provider/provider.dart';
+
+import '../../providers/auth_provider.dart';
+import '../screens.dart';
 
 class Wrapper extends StatelessWidget {
   static const route = "/";

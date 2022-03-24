@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gacela_locataire/config/theme/theme.dart';
-import 'package:gacela_locataire/models/services/localstorage_service.dart';
-import 'package:gacela_locataire/providers/auth_provider.dart';
-import 'package:gacela_locataire/views/widgets.dart';
 import 'package:provider/provider.dart';
+
+import '../../../config/theme/theme.dart';
+import '../../../providers/auth_provider.dart';
+import '../../widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   static const route = "/";

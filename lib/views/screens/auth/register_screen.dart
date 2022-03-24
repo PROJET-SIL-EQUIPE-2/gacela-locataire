@@ -3,17 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gacela_locataire/config/theme/colors.dart';
-import 'package:gacela_locataire/config/theme/theme.dart';
-import 'package:gacela_locataire/models/locataire.dart';
-import 'package:gacela_locataire/models/notifier_state.dart';
-import 'package:gacela_locataire/providers/auth_provider.dart';
-import 'package:gacela_locataire/utilities/validation.dart';
-import 'package:gacela_locataire/views/screens.dart';
-import 'package:gacela_locataire/views/screens/auth/login_screen.dart';
-import 'package:gacela_locataire/views/widgets/gacela_widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
+import '../../../config/theme/colors.dart';
+import '../../../config/theme/theme.dart';
+import '../../../models/notifier_state.dart';
+import '../../../providers/auth_provider.dart';
+import '../../../utilities/validation.dart';
+import '../../screens.dart';
+import '../../widgets.dart';
+import '../../../models/locataire.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const route = "/register";
