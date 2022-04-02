@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CourseScreen extends StatelessWidget {
-  static const route = "/";
+  static const route = "/course";
   const CourseScreen({Key? key}) : super(key: key);
 
   @override

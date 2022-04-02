@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatelessWidget {
+class SupportScreen extends StatelessWidget {
   static const route = "/";
-  const ProfileScreen({Key? key}) : super(key: key);
+  const SupportScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile Screen"),
+        title: const Text("Support Screen"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [Text("Profile Screen")],
+          children: const [Text("Support Screen")],
         ),
       ),
     );
