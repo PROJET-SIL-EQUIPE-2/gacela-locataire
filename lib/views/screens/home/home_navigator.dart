@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'profile/profile_screen.dart';
+import 'course/course_screen.dart';
 
 class HomeNavigator extends StatelessWidget {
   static final GlobalKey<NavigatorState> homeNavigatorKey =
@@ -15,6 +17,10 @@ class HomeNavigator extends StatelessWidget {
         switch (settings.name) {
           case HomeScreen.route:
             return const HomeScreen();
+          case ProfileScreen.route:
+            return const ProfileScreen();
+          case CourseScreen.route:
+            return const CourseScreen();
           default:
             return const HomeScreen();
         }

@@ -15,15 +15,15 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 1;
 
   final _navigators = [
-    const CourseNavigator(),
+    const TransactionsNavigator(),
     const HomeNavigator(),
-    const ProfileNavigator(),
+    const SupportNavigator(),
   ];
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
-    CourseNavigator.courseNavigatorKey,
+    TransactionsNavigator.transactionsNavigatorKey,
     HomeNavigator.homeNavigatorKey,
-    ProfileNavigator.profileNavigatorKey
+    SupportNavigator.supportNavigatorKey
   ];
 
   Future<bool> _systemBackButtonPressed() async {
@@ -66,7 +66,9 @@ class _MainScreenState extends State<MainScreen> {
           child: BottomNavigationBar(
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            selectedItemColor: GacelaColors.gacelaPurple,
+            unselectedFontSize: 0.0,
+            selectedFontSize: 0.0,
+            selectedItemColor: GacelaColors.gacelaOrange,
             backgroundColor: Colors.white,
             elevation: 0,
             iconSize: 30,
@@ -74,12 +76,14 @@ class _MainScreenState extends State<MainScreen> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.calendar_today), label: 'Courses'),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined), label: 'Home'),
+                  icon: Icon(Icons.home_filled), label: 'Home'),
               BottomNavigationBarItem(
                   icon: Icon(Icons.track_changes_outlined), label: 'Profile')
             ],
             currentIndex: _currentIndex,
-            onTap: (index) => setState(() => _currentIndex = index),
+            onTap: (index) {
+              if (index != _currentIndex) setState(() => _currentIndex = index);
+            },
           ),
         ),
         body: SafeArea(
