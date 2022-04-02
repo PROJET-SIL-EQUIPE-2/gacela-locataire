@@ -65,7 +65,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(
-                height: GacelaTheme.vDivider * 3,
+                height: GacelaTheme.vDivider * 2,
               ),
               Consumer<AuthProvider>(
                 builder: (ctx, authProvider, _) {

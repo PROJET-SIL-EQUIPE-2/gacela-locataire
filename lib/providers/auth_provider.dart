@@ -22,7 +22,8 @@ class AuthProvider extends AbstractProvider {
   Locataire? get user => _user;
 
   bool get isAuth {
-    if (_isAuth != null && _isAuth == true && _token != null) {
+    // && _isAuth == true && _token != null
+    if (_isAuth != null && _isAuth == true) {
       return true;
     } else {
       return false;
@@ -43,16 +44,18 @@ class AuthProvider extends AbstractProvider {
       _user = data?["user"];
       print(_user);
       if (_user != null) {
+        print(_user);
         _token = data!["token"];
         _isAuth = true;
         final LocalStorageService localStorageService = LocalStorageService();
         await localStorageService.saveUser(_token, _user?.id);
+        setProviderState(NotifierState.loaded);
       }
     } on Failure catch (f) {
       // error case
       setProviderFailure(f);
+      setProviderState(NotifierState.initial);
     }
-    setProviderState(NotifierState.loaded);
   }
 
   Future<bool?> register(Locataire? locataire, String? password) async {
@@ -92,8 +95,10 @@ class AuthProvider extends AbstractProvider {
       _isAuth = false;
       _token = null;
       _user = null;
+      clearMessage();
       await LocalStorageService.clearLocalStorage();
       setProviderState(NotifierState.initial);
+      setProviderFailure(null);
       return true;
     } catch (e) {
       return false;

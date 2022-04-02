@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("Current User id = ${auth.user?.id}"),
+              Text("Current User email = ${auth.user?.email}"),
               Center(
                   child: gacelaButton(
                       text: "Logout",

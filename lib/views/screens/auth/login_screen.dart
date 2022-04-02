@@ -99,9 +99,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   Consumer<AuthProvider>(
                     builder: (ctx, authProvider, _) {
                       if (authProvider.state == NotifierState.initial) {
-                        return gacelaButton(
-                          text: "Connexion",
-                          onPressed: _submit,
+                        return Column(
+                          children: [
+                            if (authProvider.failure != null)
+                              gacelaErrorText(
+                                  text: authProvider.failure!.message),
+                            gacelaButton(
+                              text: "Connexion",
+                              onPressed: _submit,
+                            ),
+                          ],
                         );
                       } else if (authProvider.state == NotifierState.loading) {
                         return const CircularProgressIndicator();
@@ -117,7 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         );
                       } else {
-                        return const SizedBox.shrink();
+                        return gacelaButton(
+                          text: "Connexion",
+                          onPressed: _submit,
+                        );
                       }
                     },
                   ),
