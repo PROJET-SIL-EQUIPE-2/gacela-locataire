@@ -27,6 +27,5 @@ If you have some problemes contact @NassimFatmi or @Dunya18
 
 ### Remarques: 
 - Don't push in the main branch create your own ❗
-- Use slack channel if you need help or something (messenger les messages yro7o 😂)
 - Same thing for AM application ❗❗
 - READ la charte de codage ❗❗❗
