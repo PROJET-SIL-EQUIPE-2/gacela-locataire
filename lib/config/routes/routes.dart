@@ -10,5 +10,6 @@ class Routes {
     IntroScreen.route: (_) => const IntroScreen(),
     ResetPasswordScreen.route: (_) => const ResetPasswordScreen(),
     ThanksScreen.route: (_) => const ThanksScreen(),
+    MainScreen.route: (_) => const MainScreen()
   };
 }
