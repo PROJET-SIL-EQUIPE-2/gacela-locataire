@@ -69,6 +69,7 @@ class _MainScreenState extends State<MainScreen> {
             unselectedFontSize: 0.0,
             selectedFontSize: 0.0,
             selectedItemColor: GacelaColors.gacelaOrange,
+            unselectedItemColor: GacelaColors.gacelaGrey,
             backgroundColor: Colors.white,
             elevation: 0,
             iconSize: 30,

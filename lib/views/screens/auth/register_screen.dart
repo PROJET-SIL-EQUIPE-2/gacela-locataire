@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gacela_locataire/views/screens/wrapper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -149,6 +150,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     emailValidation(value, "L'adresse email est erroné"),
               ),
               const SizedBox(height: GacelaTheme.vDivider),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset("assets/icons/dz.svg", width: 18),
+                  const Text("+213 ",
+                      style: TextStyle(color: GacelaColors.gacelaGrey)),
+                  Flexible(
+                    child: gacelaTextFormField(
+                        value: _locataire.phoneNumber,
+                        hintText: " Numéro de téléphone",
+                        onSaved: (value) =>
+                            _locataire.phoneNumber = value?.trim(),
+                        keyboardType: TextInputType.phone,
+                        validator: (value) => notEmptyField(
+                            value, 9, "Le numero de téléphone est invalide")),
+                  ),
+                ],
+              ),
+              const SizedBox(height: GacelaTheme.vDivider),
               gacelaTextFormField(
                 hintText: "Password",
                 value: _password,
@@ -202,7 +222,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             gacelaLinkButton(
                 text: "Connectez-vous !",
                 onPressed: () async {
-                  Navigator.pushReplacementNamed(context, LoginScreen.route);
+                  Navigator.pushReplacementNamed(context, Wrapper.route);
                 })
           ],
         ),

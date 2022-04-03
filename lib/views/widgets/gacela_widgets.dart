@@ -73,6 +73,7 @@ Widget gacelaTextFormField({
   EdgeInsetsGeometry? padding,
   int? maxLength,
   String? value,
+  Widget? prefix,
 }) =>
     TextFormField(
       maxLength: maxLength,
@@ -80,6 +81,7 @@ Widget gacelaTextFormField({
       onChanged: onChanged,
       obscureText: obscureText,
       decoration: InputDecoration(
+        prefix: prefix,
         contentPadding: padding,
         hintText: hintText,
         labelText: labelText,
