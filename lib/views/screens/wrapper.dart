@@ -12,7 +12,7 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(builder: (context, auth, _) {
       if (auth.isAuth) {
-        return const HomeScreen();
+        return const MainScreen();
       } else {
         return FutureBuilder(
             future: auth.tryAutoLogin(),
