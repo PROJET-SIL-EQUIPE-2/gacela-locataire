@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'notifications_screen.dart';
+import 'profile/edit_profile_screen.dart';
 import 'home_screen.dart';
 import 'profile/profile_screen.dart';
 import 'course/course_screen.dart';
@@ -19,6 +21,10 @@ class HomeNavigator extends StatelessWidget {
             return const HomeScreen();
           case ProfileScreen.route:
             return const ProfileScreen();
+          case EditProfileScreen.route:
+            return const EditProfileScreen();
+          case NotificationsScreen.route:
+            return const NotificationsScreen();
           case CourseScreen.route:
             return const CourseScreen();
           default:
