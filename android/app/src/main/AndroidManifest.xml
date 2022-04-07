@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nexcode.code.gacela_locataire">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="gacela_locataire"
         android:icon="@mipmap/ic_launcher">
@@ -37,5 +38,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBC7b_5dyfWKGOiom3X6xdEApyhOcZHQCM" />
     </application>
 </manifest>
