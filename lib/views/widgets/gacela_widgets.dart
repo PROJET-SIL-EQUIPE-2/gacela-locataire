@@ -58,6 +58,63 @@ Widget gacelaButton({
         ),
       ),
     );
+Widget gacelaButton1({
+  required void Function()? onPressed,
+  required String text,
+  Color color = GacelaColors.gacelaBlue,
+  bool showShadow = true,
+  Color textColor = Colors.white,
+  double radius = 35,
+  double hPadding = 16,
+  double vPadding = 14,
+  Image? img,
+  double fontSize = 18,
+}) =>
+    GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(radius),
+          boxShadow: showShadow
+              ? [
+                  BoxShadow(
+                    color: color.withOpacity(0.34),
+                    offset: const Offset(1, 4),
+                    blurRadius: 30.0,
+                  )
+                ]
+              : null,
+        ),
+        child: Center(
+          child: img == null
+              ? Text(
+                  text,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      text,
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    img,
+                  ],
+                ),
+        ),
+      ),
+    );
 
 /// For forms only
 Widget gacelaTextFormField({

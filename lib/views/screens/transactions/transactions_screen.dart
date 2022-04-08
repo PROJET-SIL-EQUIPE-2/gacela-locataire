@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gacela_locataire/views/widgets/gacela_widgets.dart';
+
 import 'package:intl/intl.dart';
 
 import '../../../config/theme/theme.dart';

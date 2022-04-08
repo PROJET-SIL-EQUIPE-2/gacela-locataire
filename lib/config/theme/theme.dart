@@ -5,6 +5,7 @@ class GacelaTheme {
   static const double hPadding = 20.0;
   static const double vPadding = 18.0;
   static const double vDivider = 20.0;
+
   static ThemeData gacelaTheme = ThemeData(
     fontFamily: 'Poppins',
     scaffoldBackgroundColor: Colors.white,
