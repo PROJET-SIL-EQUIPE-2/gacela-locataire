@@ -33,75 +33,92 @@ class GacelaCarListItemWidget extends StatelessWidget {
         child: Row(
           children: [
             // Image
-            Container(
-              child: const Text("Image"),
-              width: width / 4,
+            Flexible(
+              flex: 1,
+              child: SizedBox(
+                child: const Text("Image"),
+                width: width / 4,
+              ),
             ),
 
             // Description
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-                Container(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    carName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: GacelaColors.gacelaDeepBlue,
+            Flexible(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Flexible(
+                    child: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        carName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: GacelaColors.gacelaDeepBlue,
+                        ),
+                      ),
                     ),
                   ),
-                ),
 
-                Container(
-                  width: width / 2,
-                  child: Row(
-                    children: [
-                      // icon
-                      const Icon(IconData(0xe662, fontFamily: 'MaterialIcons')),
+                  Flexible(
+                    child: SizedBox(
+                      width: width / 2,
+                      child: Row(
+                        children: [
+                          // icon
+                          const Icon(
+                              IconData(0xe662, fontFamily: 'MaterialIcons')),
 
-                      // Text
-                      Text("a $distance pres"),
-                    ],
-                  ),
-                )
-              ],
+                          // Text
+                          Text("a $distance pres"),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Text(
-                    type,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+            Flexible(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Flexible(
+                    child: Container(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        type,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: GacelaColors.gacelaBlue,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
-                  decoration: BoxDecoration(
-                    color: GacelaColors.gacelaBlue,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Text(
-                    "$price DA/h",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                  Flexible(
+                    child: Container(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        "$price DA/h",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: GacelaColors.gacelaDeepBlue,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: GacelaColors.gacelaDeepBlue,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             )
           ],
         ),
