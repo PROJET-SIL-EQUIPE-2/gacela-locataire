@@ -59,18 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   right: 0,
                   left: 0,
                   child: Container(
-                    height: height /4,
+                    height: height /5,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.white,
-                      /* boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(1.0, 5.0),
-                            blurRadius: 10,
-                            spreadRadius: 3)
-                      ], */
+                      
                     ),
                     child : Stack (
                       children : [
@@ -79,8 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           top : 20 ,
                           child: Container(
                             padding :  const EdgeInsets.all(3.0), 
-/*                             color : Colors.red ,
- */                            child: Column (
+                            child: Column (
                                     mainAxisSize: MainAxisSize.min,
                           
                                       children : [
@@ -154,8 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child : Column (
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-/*                                       SizedBox(height:height*0.02),
- */                                      TextFormField(
+                                      TextFormField(
                                         decoration : InputDecoration(
                                           labelText : "Votre location"
                                         ) , 

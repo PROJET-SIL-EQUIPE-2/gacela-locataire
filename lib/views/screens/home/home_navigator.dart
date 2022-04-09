@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'notifications_screen.dart';
 import 'profile/edit_profile_screen.dart';
 import 'home_screen.dart';
+import 'home_screen_details.dart';
 import 'profile/profile_screen.dart';
 import 'course/course_screen.dart';
 
@@ -18,7 +19,9 @@ class HomeNavigator extends StatelessWidget {
       onGenerateRoute: (settings) => MaterialPageRoute(builder: (context) {
         switch (settings.name) {
           case HomeScreen.route:
-            return const HomeScreen();
+/*             return const HomeScreen();
+ */  
+            return const HomeScreenDetails();        
           case ProfileScreen.route:
             return const ProfileScreen();
           case EditProfileScreen.route:
