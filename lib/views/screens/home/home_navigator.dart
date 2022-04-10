@@ -19,8 +19,8 @@ class HomeNavigator extends StatelessWidget {
       onGenerateRoute: (settings) => MaterialPageRoute(builder: (context) {
         switch (settings.name) {
           case HomeScreen.route:
-/*             return const HomeScreen();
- */  
+            /*  return const HomeScreen(); */
+  
             return const HomeScreenDetails();        
           case ProfileScreen.route:
             return const ProfileScreen();

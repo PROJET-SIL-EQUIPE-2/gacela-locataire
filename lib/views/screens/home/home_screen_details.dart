@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gacela_locataire/config/theme/colors.dart';
 import 'package:gacela_locataire/views/screens.dart';
 import 'package:gacela_locataire/views/widgets.dart';
-import 'package:gacela_locataire/views/widgets/gacela_car_details.dart';
 
 import 'package:gacela_locataire/views/widgets/map_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import "package:flutter_svg/flutter_svg.dart" ;
+
 
 class HomeScreenDetails extends StatefulWidget {
   static const route = "/";
@@ -32,8 +32,48 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
 
     return Scaffold(
       body: Stack(
+        
         children: [
-           MapWidget() ,
+          Positioned( 
+             top : 0 ,
+             right : 70 ,
+             child: FloatingActionButton(
+              onPressed: () {},
+              child: const Icon(
+                Icons.person ,
+              ),
+              backgroundColor: Colors.white,
+            ),
+           ) ,
+           Positioned(
+              top : 0 , 
+              right : 0 ,
+              child: FloatingActionButton(
+              onPressed: () {},
+              child: const Icon(
+                Icons.notifications,
+              ),
+              backgroundColor: Colors.white,
+            ),
+            ),
+            /* Stack(
+              children: [
+                            const MapWidget() ,
+                            
+          
+          
+              ]
+            ), */
+          
+            
+
+           
+           
+            
+            Positioned(
+             child: CarDetailSearch(depart: "ESI", dest:"Beaulieu") ,
+           ) , 
+          
                    Positioned (
                      bottom : 0 , 
                      left : 0 , 
