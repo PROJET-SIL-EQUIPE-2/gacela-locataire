@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gacela_locataire/views/widgets/gacela_course.dart';
 import '../../../widgets.dart';
 import '../../../../config/theme/colors.dart';
-import '../../../../config/theme/theme.dart';
 import '../../../../config/theme/theme.dart';
 
 class CourseScreen extends StatelessWidget {
   static const route = "/course";
   const CourseScreen({Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -108,7 +107,7 @@ class CourseScreen extends StatelessWidget {
                   onPressed: () {},
                   text: "Débloquer",
 
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.lock_open_outlined,
                   ),
                   // IconData(0xe3b0, fontFamily: 'MaterialIcons'),
