@@ -172,3 +172,82 @@ Widget gacelaDetails({
             ),
           ],
         ));
+Widget gacelaNotificationTile1({
+  bool isNew = false,
+  required String description,
+  void Function()? onTap,
+}) =>
+    ListTile(
+      onTap: onTap,
+      tileColor: isNew ? GacelaColors.gacelaGrey : Colors.grey,
+      isThreeLine: true,
+
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            description,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+
+      // ignore: prefer_const_constructors
+      leading: Icon(Icons.error_outline_rounded),
+    );
+Widget gacelaButton2({
+  required void Function()? onPressed,
+  required String text,
+  Color color = GacelaColors.gacelaBlue,
+  bool showShadow = true,
+  Color textColor = Colors.white,
+  double radius = 15,
+  double hPadding = 16,
+  double vPadding = 14,
+  Image? img,
+  double fontSize = 10,
+}) =>
+    GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(radius),
+          boxShadow: showShadow
+              ? [
+                  BoxShadow(
+                    color: color.withOpacity(0.34),
+                    offset: const Offset(1, 4),
+                    blurRadius: 30.0,
+                  )
+                ]
+              : null,
+        ),
+        child: Center(
+          child: img == null
+              ? Text(
+                  text,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    img,
+                    Text(
+                      text,
+                      style: TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
