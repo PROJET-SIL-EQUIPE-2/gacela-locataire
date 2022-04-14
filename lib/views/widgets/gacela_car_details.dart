@@ -31,7 +31,7 @@ class GacelaCarDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double itemMargin = 10.0;
-    double height = 100;
+    double height = 300;
     double width = MediaQuery.of(context).size.width - itemMargin;
     double padding = 10.0;
    
@@ -51,6 +51,7 @@ class GacelaCarDetailsWidget extends StatelessWidget {
         Column (
           children : [
             Container ( 
+              height : height ,
               width : width , 
 
               decoration: BoxDecoration(
@@ -64,11 +65,12 @@ class GacelaCarDetailsWidget extends StatelessWidget {
                       Column(
                             children: [
                                Container(
+                                 padding: const EdgeInsets.only(bottom : 13 , top : 10 ,) ,
                               width : width , 
                               child: Text(
                                carName ,
                                 style: TextStyle(
-                                  fontSize: 22,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.w700,
                                   color : GacelaColors.gacelaDeepBlue ,
                                 ),
@@ -93,6 +95,7 @@ class GacelaCarDetailsWidget extends StatelessWidget {
                                     TextSpan(text: type , 
                                     style: TextStyle(
                                     fontSize: 15 ,
+                                    fontWeight: FontWeight.w500,
                                     color : GacelaColors.gacelaDeepBlue ,
                               ),
                                     ),
@@ -110,11 +113,17 @@ class GacelaCarDetailsWidget extends StatelessWidget {
                             ]
                           ), 
                           Positioned(
-                            right : 0 , 
-                            top : 0 ,
-                            child: SvgPicture.asset(
-                              'assets/images/voiture.svg' ,
-                              
+                            right : -10 , 
+                            bottom : -50 ,
+                            child: Container(
+                              height : 200 ,
+                              child: Image.asset(
+                                'assets/images/voiture.png' ,
+                                fit: BoxFit.fill,
+
+                             
+                                
+                              ),
                             ),
                           ),
                     ]
@@ -131,9 +140,12 @@ class GacelaCarDetailsWidget extends StatelessWidget {
                         children : [
                          Container(
                                 width : width , 
-                                
+                                 /* decoration: BoxDecoration(
+                                   color : Colors.yellow ,
+                                    borderRadius: BorderRadius.all(Radius.circular(20))
+                                  ), */
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.only(right :8.0 , left : 8 , top : 20 , bottom :10 ),
                                   child: Text(
                                    'Attributs' ,
                                     style: TextStyle(
@@ -148,7 +160,7 @@ class GacelaCarDetailsWidget extends StatelessWidget {
                                 Expanded(
                                   child: Container (
                                     margin: const EdgeInsets.all(20) ,
-                                    height : 80 ,               
+                                    height : 100 ,               
                                     decoration: BoxDecoration(
                                     color : Colors.white ,
                                     border: Border.all(
@@ -179,7 +191,7 @@ class GacelaCarDetailsWidget extends StatelessWidget {
                                 ) ,
                                  Expanded(
                                    child: Container (
-                                    height : 80 , 
+                                    height : 100 , 
                                     margin: const EdgeInsets.all(20) ,
                                     decoration: BoxDecoration(
                                     color : Colors.white , 
@@ -253,6 +265,7 @@ class GacelaCarDetailsWidget extends StatelessWidget {
                               Expanded(
                                 child: Container(
                                     margin: const EdgeInsets.all(20) ,
+                                    padding: const EdgeInsets.only(top : 10) ,
                                      decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     color : Colors.white ,
@@ -283,8 +296,9 @@ class GacelaCarDetailsWidget extends StatelessWidget {
                               )
                         
                         ]
-                      )
-                      ]
+                      ) ,
+/*                       CarDetailSearch(depart: "ESI", dest:"Beaulieu")
+ */                      ]
                         
                   ),
                     )

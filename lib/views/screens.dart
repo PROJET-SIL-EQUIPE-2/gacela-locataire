@@ -6,3 +6,4 @@ export 'screens/auth/reset_password_screen.dart';
 export 'screens/home/home_screen.dart';
 export 'screens/auth/thanks_screen.dart';
 export 'screens/main_screen.dart';
+export 'screens/home/home_screen_details.dart' ;

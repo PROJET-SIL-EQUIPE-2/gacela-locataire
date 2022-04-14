@@ -34,7 +34,7 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
       body: Stack(
         
         children: [
-          Positioned( 
+          /* Positioned( 
              top : 0 ,
              right : 70 ,
              child: FloatingActionButton(
@@ -55,15 +55,15 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
               ),
               backgroundColor: Colors.white,
             ),
-            ),
-            /* Stack(
+            ), */
+             Stack(
               children: [
                             const MapWidget() ,
                             
           
           
               ]
-            ), */
+            ), 
           
             
 
@@ -71,15 +71,16 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
            
             
             Positioned(
+              bottom : 0 ,
              child: CarDetailSearch(depart: "ESI", dest:"Beaulieu") ,
            ) , 
           
                    Positioned (
-                     bottom : 0 , 
+                   /*   bottom : 0 ,  */
                      left : 0 , 
                      right : 0 ,
                      child : Container(
-                    height : height / 2 ,
+                    height : height  ,
                     decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color : GacelaColors.gacelaLightOrange ,
