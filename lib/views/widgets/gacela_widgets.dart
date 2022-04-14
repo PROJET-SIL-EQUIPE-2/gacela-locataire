@@ -311,3 +311,38 @@ Widget gacelaSuccessText({required String text}) => Container(
         ],
       ),
     );
+
+class GacelaIconButton extends StatelessWidget {
+  final Widget child;
+  final void Function()? onTap;
+  const GacelaIconButton({
+    Key? key,
+    required this.child,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 50,
+        width: 50,
+        padding: const EdgeInsets.all(5),
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(0, 2),
+                spreadRadius: 2.0,
+                blurRadius: 4.0,
+              )
+            ]),
+        child: child,
+      ),
+    );
+  }
+}

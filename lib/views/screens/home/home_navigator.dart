@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gacela_locataire/views/screens/home/search_screen.dart';
+import 'package:gacela_locataire/views/screens/home/select_car_screen.dart';
 import 'notifications_screen.dart';
 import 'profile/edit_profile_screen.dart';
 import 'home_screen.dart';
@@ -19,6 +21,10 @@ class HomeNavigator extends StatelessWidget {
         switch (settings.name) {
           case HomeScreen.route:
             return const HomeScreen();
+          case SearchScreen.route:
+            return const SearchScreen();
+          case SelectCarScreen.route:
+            return const SelectCarScreen();
           case ProfileScreen.route:
             return const ProfileScreen();
           case EditProfileScreen.route:
