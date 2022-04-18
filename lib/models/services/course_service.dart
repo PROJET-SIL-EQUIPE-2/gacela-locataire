@@ -14,7 +14,7 @@ class CourseService {
   /// @param depart        depart position
   /// @param destination   destination position
   /// return true if the car is reserved succefully for the locataire else false
-  Future<bool> createReservation(
+  Future<int> createReservation(
     String? token,
     String? email,
     String? matricule,
@@ -38,12 +38,15 @@ class CourseService {
             "destLong": destination?.longitude,
           }));
 
-      if (response.statusCode == 200) {
-        // final data = json.decode(response.body);
-        return true;
+      if (response.statusCode == 201) {
+        final data = json.decode(response.body);
+        print(response.body);
+        print(data["reservation"]["reservation_id"]);
+        return (data["reservation"]["reservation_id"]);
       } else {
         final data = jsonDecode(response.body);
-        throw Failure(data["errors"][0]["msg"], code: response.statusCode);
+        print(response.body);
+        throw Failure("Il ya un erreur", code: response.statusCode);
       }
     } on SocketException {
       throw Failure('No Internet connection 😑');
@@ -64,6 +67,7 @@ class CourseService {
   Future<bool> unlockCar(
       String? token, int? reservationId, String? code) async {
     final String url = '${dotenv.get("BASE_URL")}/reservations/verify-code';
+    print("\n${reservationId}\n\n");
     try {
       final response = await http.post(Uri.parse(url),
           headers: {

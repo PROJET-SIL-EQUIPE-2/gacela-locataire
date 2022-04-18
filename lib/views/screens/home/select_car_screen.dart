@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gacela_locataire/config/theme/colors.dart';
 import 'package:gacela_locataire/config/theme/theme.dart';
+import 'package:gacela_locataire/models/errors/failure.dart';
+import 'package:gacela_locataire/models/services/course_service.dart';
+import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:gacela_locataire/views/screens/home/course/course_screen.dart';
 import 'package:gacela_locataire/views/widgets.dart';
 import 'package:gacela_locataire/views/widgets/gacela_widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class SelectCarScreen extends StatefulWidget {
   static const route = "/search/select";
@@ -15,6 +19,8 @@ class SelectCarScreen extends StatefulWidget {
 }
 
 class _SelectCarScreenState extends State<SelectCarScreen> {
+  bool isLoading = false;
+
   _showResults() async {
     await showModalBottomSheet(
         isDismissible: false,
@@ -175,12 +181,37 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                                   ),
                             ),
                             gacelaButton(
-                              onPressed: () async =>
-                                  Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                CourseScreen.route,
-                                ModalRoute.withName('/search'),
-                              ),
+                              onPressed: () async {
+                                setState(() {
+                                  isLoading = true;
+                                });
+
+                                try {
+                                  CourseService courseService = CourseService();
+                                  await courseService.createReservation(
+                                      Provider.of<AuthProvider>(context,
+                                              listen: false)
+                                          .token,
+                                      Provider.of<AuthProvider>(context,
+                                              listen: false)
+                                          .user
+                                          ?.email,
+                                      "44445544",
+                                      LatLng(1, 1),
+                                      LatLng(2, 2));
+
+                                  await Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      CourseScreen.route,
+                                      ModalRoute.withName('/search'));
+                                } on Failure catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.message)));
+                                }
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              },
                               text: "Appeler",
                               color: GacelaColors.gacelaDeepBlue,
                               vPadding: 8,

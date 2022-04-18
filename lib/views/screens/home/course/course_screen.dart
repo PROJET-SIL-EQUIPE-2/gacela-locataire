@@ -51,6 +51,7 @@ class _CourseScreenState extends State<CourseScreen> {
                     children: [
                       gacelaTextField(
                         hintText: "Code",
+                        onChanged: (value) => code = value,
                       ),
                       const SizedBox(height: GacelaTheme.vDivider * 2),
                       gacelaButton(
@@ -71,11 +72,9 @@ class _CourseScreenState extends State<CourseScreen> {
     Navigator.pop(context);
     setState(() => isLoading = true);
     try {
-      // await Provider.of<CourseProvider>(context, listen: false).unlockCar(
-      //     Provider.of<AuthProvider>(context, listen: false).token,
-      //     Provider.of<CourseProvider>(context, listen: false).currentReservation,
-      //     code);
-      await Future.delayed(const Duration(seconds: 2));
+      await Provider.of<CourseProvider>(context, listen: false).unlockCar(
+          Provider.of<AuthProvider>(context, listen: false).token, 13, code);
+      // await Future.delayed(const Duration(seconds: 2));
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(

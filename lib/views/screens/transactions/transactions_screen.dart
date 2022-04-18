@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gacela_locataire/providers/auth_provider.dart';
 
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../../config/theme/theme.dart';
 import '../../../config/theme/colors.dart';
@@ -116,72 +118,77 @@ class TransactionsScreen extends StatelessWidget {
               ))
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: GacelaTheme.hPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Center(
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: NetworkImage("https://i.pravatar.cc/300"),
+      body: Consumer<AuthProvider>(
+        builder: (_, auth, __) => SingleChildScrollView(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: GacelaTheme.hPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Center(
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage("https://i.pravatar.cc/300"),
+                  ),
                 ),
-              ),
-              const SizedBox(height: GacelaTheme.vDivider),
-              Text("User name", style: Theme.of(context).textTheme.headline3),
-              Text("Lieu", style: Theme.of(context).textTheme.headline4),
-              const SizedBox(height: GacelaTheme.vDivider),
-              Text("Transactions",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline2!
-                      .copyWith(color: GacelaColors.gacelaDeepBlue)),
-              const SizedBox(height: GacelaTheme.vDivider),
-              gacelaCard(
-                  image: "http://via.placeholder.com/640x360",
-                  carName: "Hyundai Accent",
-                  date: DateTime(2022, 3, 10, 10, 48),
-                  duration: 40,
-                  price: 40),
-              gacelaCard(
-                  image: "http://via.placeholder.com/640x360",
-                  carName: "Hyundai Accent",
-                  date: DateTime(2022, 3, 10, 10, 48),
-                  duration: 40,
-                  price: 40),
-              gacelaCard(
-                  image: "http://via.placeholder.com/640x360",
-                  carName: "Hyundai Accent",
-                  date: DateTime(2022, 3, 10, 10, 48),
-                  duration: 40,
-                  price: 40),
-              gacelaCard(
-                  image: "http://via.placeholder.com/640x360",
-                  carName: "Hyundai Accent",
-                  date: DateTime(2022, 3, 10, 10, 48),
-                  duration: 40,
-                  price: 40),
-              gacelaCard(
-                  image: "http://via.placeholder.com/640x360",
-                  carName: "Hyundai Accent",
-                  date: DateTime(2022, 3, 10, 10, 48),
-                  duration: 40,
-                  price: 40),
-              gacelaCard(
-                  image: "http://via.placeholder.com/640x360",
-                  carName: "Hyundai Accent",
-                  date: DateTime(2022, 3, 10, 10, 48),
-                  duration: 40,
-                  price: 40),
-              gacelaCard(
-                  image: "http://via.placeholder.com/640x360",
-                  carName: "Hyundai Accent",
-                  date: DateTime(2022, 3, 10, 10, 48),
-                  duration: 40,
-                  price: 40),
-            ],
+                const SizedBox(height: GacelaTheme.vDivider),
+                Text("${auth.user?.familyName} ${auth.user?.name}",
+                    style: Theme.of(context).textTheme.headline3),
+                Text("${auth.user?.email}",
+                    style: Theme.of(context).textTheme.headline4),
+                const SizedBox(height: GacelaTheme.vDivider),
+                Text("Transactions",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline2!
+                        .copyWith(color: GacelaColors.gacelaDeepBlue)),
+                const SizedBox(height: GacelaTheme.vDivider),
+                gacelaCard(
+                    image: "http://via.placeholder.com/640x360",
+                    carName: "Hyundai Accent",
+                    date: DateTime(2022, 3, 10, 10, 48),
+                    duration: 40,
+                    price: 40),
+                gacelaCard(
+                    image: "http://via.placeholder.com/640x360",
+                    carName: "Hyundai Accent",
+                    date: DateTime(2022, 3, 10, 10, 48),
+                    duration: 40,
+                    price: 40),
+                gacelaCard(
+                    image: "http://via.placeholder.com/640x360",
+                    carName: "Hyundai Accent",
+                    date: DateTime(2022, 3, 10, 10, 48),
+                    duration: 40,
+                    price: 40),
+                gacelaCard(
+                    image: "http://via.placeholder.com/640x360",
+                    carName: "Hyundai Accent",
+                    date: DateTime(2022, 3, 10, 10, 48),
+                    duration: 40,
+                    price: 40),
+                gacelaCard(
+                    image: "http://via.placeholder.com/640x360",
+                    carName: "Hyundai Accent",
+                    date: DateTime(2022, 3, 10, 10, 48),
+                    duration: 40,
+                    price: 40),
+                gacelaCard(
+                    image: "http://via.placeholder.com/640x360",
+                    carName: "Hyundai Accent",
+                    date: DateTime(2022, 3, 10, 10, 48),
+                    duration: 40,
+                    price: 40),
+                gacelaCard(
+                    image: "http://via.placeholder.com/640x360",
+                    carName: "Hyundai Accent",
+                    date: DateTime(2022, 3, 10, 10, 48),
+                    duration: 40,
+                    price: 40),
+              ],
+            ),
           ),
         ),
       ),

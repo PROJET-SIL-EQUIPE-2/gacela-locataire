@@ -1,16 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:gacela_locataire/views/screens/home/course/course_screen.dart';
-import 'package:gacela_locataire/views/screens/home/notifications_screen.dart';
-import 'package:gacela_locataire/views/screens/home/profile/profile_screen.dart';
-import 'package:gacela_locataire/views/screens/home/search_screen.dart';
-
-import 'package:gacela_locataire/views/widgets/gacela_course.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import './profile/profile_screen.dart';
+import 'notifications_screen.dart';
+import 'search_screen.dart';
+
 import '../../widgets.dart';
-import '../../../../config/theme/colors.dart';
-import '../../../../config/theme/theme.dart';
 
 class HomeScreen extends StatefulWidget {
   static const route = "/";

@@ -77,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       final ImagePicker _picker = ImagePicker();
                       try {
                         final XFile? file = await _picker.pickImage(
-                            source: ImageSource.camera, imageQuality: 50);
+                            source: ImageSource.gallery, imageQuality: 10);
 
                         if (file != null) {
                           _locataire.personalPhoto = file;

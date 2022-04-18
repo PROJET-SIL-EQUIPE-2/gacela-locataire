@@ -1,5 +1,5 @@
-import '../models/notifier_state.dart';
 import 'abstract_provider.dart';
+import '../models/notifier_state.dart';
 import '../models/locataire.dart';
 import '../models/services/auth_service.dart';
 import '../models/errors/failure.dart';
@@ -48,7 +48,7 @@ class AuthProvider extends AbstractProvider {
         _token = data!["token"];
         _isAuth = true;
         final LocalStorageService localStorageService = LocalStorageService();
-        await localStorageService.saveUser(_token, _user?.id);
+        await localStorageService.saveUser(_token, _user?.id, _user);
         setProviderState(NotifierState.loaded);
       }
     } on Failure catch (f) {
@@ -84,7 +84,16 @@ class AuthProvider extends AbstractProvider {
     } else {
       _isAuth = true;
       _token = userData["gacela_token"];
-      _user = Locataire(id: int.parse(userData["user_id"]));
+      _user = Locataire(
+        id: int.parse(userData["user"]["user_id"]),
+        email: userData["user"]["email"],
+        familyName: userData["user"]["family_name"],
+        name: userData["user"]["name"],
+        phoneNumber: userData["user"]["phone_number"],
+        personalPhoto: userData["user"]["personal_photo"],
+        photoIdentity: userData["user"]["photo_identity"],
+        validated: userData["user"]["validated"],
+      );
       notifyListeners();
       return true;
     }

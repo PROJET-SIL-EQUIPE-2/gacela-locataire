@@ -26,7 +26,8 @@ class CourseProvider extends ChangeNotifier {
   ) async {
     final CourseService courseService = CourseService();
     // currentReservation
-    return await courseService.createReservation(
+    _currentReservation = await courseService.createReservation(
         token, email, matricule, depart, destination);
+    return true;
   }
 }

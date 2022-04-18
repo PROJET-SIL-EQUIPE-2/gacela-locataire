@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:gacela_locataire/models/locataire.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
@@ -7,12 +8,22 @@ class LocalStorageService {
   /// @param token      auth token
   /// @param userId     represent the user id
   /// returns true if saved else false
-  Future<bool> saveUser(String? token, int? userId) async {
+  Future<bool> saveUser(
+      String? token, int? userId, Locataire? locataire) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final body = {
         "gacela_token": token,
-        "user_id": userId.toString(),
+        "user": {
+          "user_id": userId.toString(),
+          "email": locataire?.email,
+          "phone_number": locataire?.phoneNumber,
+          "name": locataire?.name,
+          "family_name": locataire?.familyName,
+          "personal_photo": locataire?.personalPhoto,
+          "validated": locataire?.validated,
+          "photo_identity": locataire?.photoIdentity,
+        }
       };
       await prefs.setString(
         "gacela_user",
