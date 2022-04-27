@@ -52,7 +52,7 @@ class ProfileService {
 
   Future<Map<String, dynamic>> changeEmail(String? newEmail) async {
     final String url =
-        '${dotenv.get("BASE_URL")}/mobile_settings/locataire/password/${locataire.id}';
+        '${dotenv.get("BASE_URL")}/mobile_settings/locataire/email/${locataire.id}';
     try {
       final response = await http.put(Uri.parse(url),
           headers: {
