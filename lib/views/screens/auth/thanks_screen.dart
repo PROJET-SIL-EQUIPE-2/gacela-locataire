@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gacela_locataire/views/screens/wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -36,8 +37,7 @@ class ThanksScreen extends StatelessWidget {
                     .clearMessage();
                 Provider.of<AuthProvider>(context, listen: false)
                     .setProviderState(NotifierState.initial);
-                await Navigator.pushReplacementNamed(
-                    context, LoginScreen.route);
+                await Navigator.pushReplacementNamed(context, Wrapper.route);
               })
         ],
       ),

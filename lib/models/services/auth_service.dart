@@ -70,10 +70,10 @@ class AuthService {
         http.MultipartFile(
           'personal_photo',
           locataire.personalPhoto.readAsBytes().asStream(),
-          await locataire.photoIdentity.length(),
-          filename: locataire.photoIdentity.name,
+          await locataire.personalPhoto.length(),
+          filename: locataire.personalPhoto.name,
           contentType:
-              MediaType('image', locataire.photoIdentity.name.split(".")[1]),
+              MediaType('image', locataire.personalPhoto.name.split(".")[1]),
         ),
       );
       request.headers.addAll(headers);
