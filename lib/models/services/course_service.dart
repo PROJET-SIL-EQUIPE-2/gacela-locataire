@@ -14,7 +14,7 @@ class CourseService {
   /// @param depart        depart position
   /// @param destination   destination position
   /// return true if the car is reserved succefully for the locataire else false
-  Future<int> createReservation(
+  Future<Map<String, dynamic>> createReservation(
     String? token,
     String? email,
     String? matricule,
@@ -41,8 +41,7 @@ class CourseService {
       if (response.statusCode == 201) {
         final data = json.decode(response.body);
         print(response.body);
-        print(data["reservation"]["reservation_id"]);
-        return (data["reservation"]["reservation_id"]);
+        return data["reservation"];
       } else {
         final data = jsonDecode(response.body);
         print(response.body);
@@ -67,7 +66,6 @@ class CourseService {
   Future<bool> unlockCar(
       String? token, int? reservationId, String? code) async {
     final String url = '${dotenv.get("BASE_URL")}/reservations/verify-code';
-    print("\n${reservationId}\n\n");
     try {
       final response = await http.post(Uri.parse(url),
           headers: {
@@ -79,6 +77,40 @@ class CourseService {
       if (response.statusCode == 200) {
         // final data = json.decode(response.body);
         return true;
+      } else {
+        final data = jsonDecode(response.body);
+        throw Failure(data["errors"][0]["msg"], code: response.statusCode);
+      }
+    } on SocketException {
+      throw Failure('No Internet connection 😑');
+    } on HttpException {
+      throw Failure("Couldn't find the post 😱");
+    } on FormatException {
+      throw Failure("Bad response format 👎");
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  /// Unlock a car for a Locataire
+  /// @param reservationId     car reservation id
+  /// @param code              code de verification
+  /// return true if the car is unlocked succefully else false
+  Future<Map<String, dynamic>> sendDemandeSupport(String? token,
+      int? reservationId, String? typeSupport, String? message) async {
+    final String url = '${dotenv.get("BASE_URL")}/supports/$reservationId';
+    try {
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            "Content-Type": "application/json",
+            "token": token ?? "",
+          },
+          body: jsonEncode({"typeSupport": typeSupport, "message": message}));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data;
       } else {
         final data = jsonDecode(response.body);
         throw Failure(data["errors"][0]["msg"], code: response.statusCode);

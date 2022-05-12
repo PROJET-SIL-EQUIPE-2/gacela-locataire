@@ -5,9 +5,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class CourseProvider extends ChangeNotifier {
   bool isUnlocked = false;
   String courseStatus = "none"; // waiting, incourse, none, finished
-  int? _currentReservation;
+  int? reservationId;
 
-  int? get currentReservation => _currentReservation;
+  LatLng? depart = const LatLng(36.737232, 3.086472);
+  LatLng? destination = const LatLng(36.365, 6.61472);
+
+  String? carType = "comfort";
+  set setCarType(String? carType) {
+    this.carType = carType;
+  }
 
   Future<void> unlockCar(
       String? token, int? reservationId, String? code) async {
@@ -17,17 +23,29 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> createReservation(
+  Future createReservation(
     String? token,
     String? email,
     String? matricule,
-    LatLng? depart,
-    LatLng? destination,
   ) async {
     final CourseService courseService = CourseService();
     // currentReservation
-    _currentReservation = await courseService.createReservation(
+    final data = await courseService.createReservation(
         token, email, matricule, depart, destination);
-    return true;
+    print(data);
+    reservationId = data["reservation_id"];
+    notifyListeners();
+    return data["reservation_id"];
+  }
+
+  Future<Map<String, dynamic>> sendDemandeSupport(
+      String? token, String? typeSupport, String? message) async {
+    final CourseService courseService = CourseService();
+    print("\nhello reservation : $reservationId\n");
+    // currentReservation
+    final Map<String, dynamic> result = await courseService.sendDemandeSupport(
+        token, reservationId, typeSupport, message);
+
+    return result;
   }
 }
