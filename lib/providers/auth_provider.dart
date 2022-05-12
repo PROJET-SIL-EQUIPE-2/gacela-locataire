@@ -17,6 +17,8 @@ class AuthProvider extends AbstractProvider {
 
   String? get message => _message;
 
+  int? reservation;
+
   clearMessage() => _message = null;
 
   Locataire? get user => _user;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'config/routes/routes.dart';
 import 'config/theme/theme.dart';
 import 'providers/auth_provider.dart';
+import 'providers/course_provider.dart';
 
 class GacelaLocataireApp extends StatelessWidget {
   const GacelaLocataireApp({Key? key}) : super(key: key);

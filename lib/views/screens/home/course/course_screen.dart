@@ -3,6 +3,7 @@ import 'package:gacela_locataire/models/errors/failure.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:gacela_locataire/providers/course_provider.dart';
 import 'package:gacela_locataire/views/screens/home/home_screen.dart';
+import 'package:gacela_locataire/views/screens/home/support/support_screen.dart';
 import 'package:gacela_locataire/views/screens/navigators.dart';
 import 'package:gacela_locataire/views/widgets/gacela_course.dart';
 import 'package:provider/provider.dart';
@@ -155,6 +156,18 @@ class _CourseScreenState extends State<CourseScreen> {
             ),
             onPressed: () async => await _showQuitCourseDialog(),
           ),
+          actions: [
+            TextButton.icon(
+              icon: const Icon(
+                Icons.support_agent_outlined,
+                color: Colors.black,
+              ),
+              label:
+                  const Text("Support", style: TextStyle(color: Colors.black)),
+              onPressed: () async =>
+                  await Navigator.of(context).pushNamed(SupportScreen.route),
+            ),
+          ],
         ),
         body: Stack(
           alignment: Alignment.center,

@@ -4,6 +4,7 @@ import 'package:gacela_locataire/config/theme/theme.dart';
 import 'package:gacela_locataire/models/errors/failure.dart';
 import 'package:gacela_locataire/models/services/course_service.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
+import 'package:gacela_locataire/providers/course_provider.dart';
 import 'package:gacela_locataire/views/screens/home/course/course_screen.dart';
 import 'package:gacela_locataire/views/widgets.dart';
 import 'package:gacela_locataire/views/widgets/gacela_widgets.dart';
@@ -21,223 +22,26 @@ class SelectCarScreen extends StatefulWidget {
 class _SelectCarScreenState extends State<SelectCarScreen> {
   bool isLoading = false;
 
-  _showResults() async {
-    await showModalBottomSheet(
-        isDismissible: false,
-        enableDrag: false,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (context) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.5,
-            padding: const EdgeInsets.only(top: GacelaTheme.vPadding),
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                )),
-            child: Wrap(
-              children: [
-                Center(
-                  child: Text(
-                    "Véhicules proches de vous",
-                    style: Theme.of(context).textTheme.headline3,
-                  ),
-                ),
-                const SizedBox(height: GacelaTheme.vDivider * 2),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: GacelaTheme.hPadding),
-                  child: Column(
-                    children: [
-                      GacelaCarCard(
-                        carName: "Hyundai Accent",
-                        imageUrl: "",
-                        price: 200,
-                        time: "à 1 min près",
-                        type: "classic",
-                        onTap: () async {
-                          Navigator.pop(context);
-                          await _requestCar();
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  _requestCar() async {
-    await showModalBottomSheet(
-        isDismissible: false,
-        enableDrag: false,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.only(top: GacelaTheme.vPadding),
-            decoration: const BoxDecoration(
-                color: GacelaColors.gacelaOrange,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                )),
-            child: Wrap(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(GacelaTheme.hPadding),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Hyundai accent",
-                            style:
-                                Theme.of(context).textTheme.headline3!.copyWith(
-                                      color: GacelaColors.gacelaDeepBlue,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                          ),
-                          Row(
-                            children: const [
-                              Icon(Icons.camera_outlined),
-                              Text("0234 5678 8939 16"),
-                            ],
-                          )
-                        ],
-                      ),
-                      Image.asset("assets/images/hyunday.png"),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: GacelaTheme.vDivider),
-                      Text(
-                        "Attributs",
-                        textAlign: TextAlign.start,
-                        style: Theme.of(context).textTheme.headline3!.copyWith(
-                              color: GacelaColors.gacelaDeepBlue,
-                            ),
-                      ),
-                      const SizedBox(height: GacelaTheme.vDivider),
-                      Container(
-                        padding: const EdgeInsets.all(18),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                              color: GacelaColors.gacelaDeepBlue, width: 1),
-                        ),
-                        child: Column(
-                          children: [
-                            const Icon(
-                              Icons.chair,
-                              size: 35,
-                            ),
-                            Text(
-                              "Places",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline4!
-                                  .copyWith(
-                                    color: GacelaColors.gacelaDeepBlue,
-                                  ),
-                            ),
-                            Text(
-                              "5",
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: GacelaTheme.hPadding, vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "120 DA",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline2!
-                                  .copyWith(
-                                    color: GacelaColors.gacelaDeepBlue,
-                                  ),
-                            ),
-                            gacelaButton(
-                              onPressed: () async {
-                                setState(() {
-                                  isLoading = true;
-                                });
-
-                                try {
-                                  CourseService courseService = CourseService();
-                                  await courseService.createReservation(
-                                      Provider.of<AuthProvider>(context,
-                                              listen: false)
-                                          .token,
-                                      Provider.of<AuthProvider>(context,
-                                              listen: false)
-                                          .user
-                                          ?.email,
-                                      "44445544",
-                                      LatLng(1, 1),
-                                      LatLng(2, 2));
-
-                                  await Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      CourseScreen.route,
-                                      ModalRoute.withName('/search'));
-                                } on Failure catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(e.message)));
-                                }
-                                setState(() {
-                                  isLoading = false;
-                                });
-                              },
-                              text: "Appeler",
-                              color: GacelaColors.gacelaDeepBlue,
-                              vPadding: 8,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      _showResults();
-    });
-  }
+  bool _requested = false;
+  bool _showResults = true;
 
   @override
   Widget build(BuildContext context) {
+    Future createReservation() async {
+      try {
+        await Provider.of<CourseProvider>(context, listen: false)
+            .createReservation(
+                Provider.of<AuthProvider>(context, listen: false).token,
+                Provider.of<AuthProvider>(context, listen: false).user?.email,
+                "20012001");
+        await Navigator.pushNamedAndRemoveUntil(
+            context, CourseScreen.route, ModalRoute.withName('/search'));
+      } on Failure catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message)));
+      }
+    }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -261,8 +65,190 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                     child: Icon(
                   Icons.arrow_back_ios,
                 )),
-                onTap: () => Navigator.pop(context)),
+                onTap: () {
+                  Navigator.pop(context);
+                }),
           ),
+          if (_showResults)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                padding: const EdgeInsets.only(top: GacelaTheme.vPadding),
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    )),
+                child: Wrap(
+                  children: [
+                    Center(
+                      child: Text(
+                        "Véhicules proches de vous",
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
+                    ),
+                    const SizedBox(height: GacelaTheme.vDivider * 2),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: GacelaTheme.hPadding),
+                      child: Column(
+                        children: [
+                          GacelaCarCard(
+                            carName: "Hyundai Accent",
+                            imageUrl: "",
+                            price: 200,
+                            time: "à 1 min près",
+                            type: "classic",
+                            onTap: () async {
+                              setState(() {
+                                _showResults = false;
+                                _requested = true;
+                              });
+                              // await _requestCar(appcontext);
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          if (_requested)
+            Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.only(top: GacelaTheme.vPadding),
+                  decoration: const BoxDecoration(
+                      color: GacelaColors.gacelaOrange,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      )),
+                  child: Wrap(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(GacelaTheme.hPadding),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Hyundai accent",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3!
+                                      .copyWith(
+                                        color: GacelaColors.gacelaDeepBlue,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                                Row(
+                                  children: const [
+                                    Icon(Icons.camera_outlined),
+                                    Text("0234 5678 8939 16"),
+                                  ],
+                                )
+                              ],
+                            ),
+                            Image.asset("assets/images/hyunday.png"),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            topRight: Radius.circular(25),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: GacelaTheme.vDivider),
+                            Text(
+                              "Attributs",
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3!
+                                  .copyWith(
+                                    color: GacelaColors.gacelaDeepBlue,
+                                  ),
+                            ),
+                            const SizedBox(height: GacelaTheme.vDivider),
+                            Container(
+                              padding: const EdgeInsets.all(18),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                border: Border.all(
+                                    color: GacelaColors.gacelaDeepBlue,
+                                    width: 1),
+                              ),
+                              child: Column(
+                                children: [
+                                  const Icon(
+                                    Icons.chair,
+                                    size: 35,
+                                  ),
+                                  Text(
+                                    "Places",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline4!
+                                        .copyWith(
+                                          color: GacelaColors.gacelaDeepBlue,
+                                        ),
+                                  ),
+                                  Text(
+                                    "5",
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: GacelaTheme.hPadding,
+                                  vertical: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "120 DA",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline2!
+                                        .copyWith(
+                                          color: GacelaColors.gacelaDeepBlue,
+                                        ),
+                                  ),
+                                  gacelaButton(
+                                    onPressed: createReservation,
+                                    text: "Appeler",
+                                    color: GacelaColors.gacelaDeepBlue,
+                                    vPadding: 8,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )),
         ],
       ),
     );

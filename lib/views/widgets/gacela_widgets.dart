@@ -132,6 +132,7 @@ Widget gacelaTextFormField({
   int? maxLength,
   String? value,
   Widget? prefix,
+  int? maxLines = 1,
 }) =>
     TextFormField(
       maxLength: maxLength,

@@ -50,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
     return WillPopScope(
       onWillPop: _systemBackButtonPressed,
       child: ChangeNotifierProvider<CourseProvider>(
-        create: (_) => CourseProvider(),
+        create: (context) => CourseProvider(),
         child: Scaffold(
           bottomNavigationBar: Container(
             clipBehavior: Clip.hardEdge,
@@ -82,8 +82,6 @@ class _MainScreenState extends State<MainScreen> {
                     icon: Icon(Icons.calendar_today), label: 'Courses'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.home_filled), label: 'Home'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.track_changes_outlined), label: 'Profile')
               ],
               currentIndex: _currentIndex,
               onTap: (index) {

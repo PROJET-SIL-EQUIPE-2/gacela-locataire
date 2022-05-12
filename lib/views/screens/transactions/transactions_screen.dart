@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
+import 'package:gacela_locataire/providers/course_provider.dart';
 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +111,10 @@ class TransactionsScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                print(Provider.of<CourseProvider>(context, listen: false)
+                    .reservationId);
+              },
               icon: const Icon(
                 Icons.notifications_none_rounded,
                 color: Colors.black,
