@@ -100,6 +100,7 @@ class CourseService {
   Future<Map<String, dynamic>> sendDemandeSupport(String? token,
       int? reservationId, String? typeSupport, String? message) async {
     final String url = '${dotenv.get("BASE_URL")}/supports/$reservationId';
+    print(url);
     try {
       final response = await http.post(Uri.parse(url),
           headers: {

@@ -111,6 +111,34 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                               // await _requestCar(appcontext);
                             },
                           ),
+                          GacelaCarCard(
+                            carName: "Hyundai Accent",
+                            imageUrl: "",
+                            price: 250,
+                            time: "à 1 min près",
+                            type: "Comfort",
+                            onTap: () async {
+                              setState(() {
+                                _showResults = false;
+                                _requested = true;
+                              });
+                              // await _requestCar(appcontext);
+                            },
+                          ),
+                          GacelaCarCard(
+                            carName: "Hyundai Accent",
+                            imageUrl: "Espace",
+                            price: 300,
+                            time: "à 1 min près",
+                            type: "comfort",
+                            onTap: () async {
+                              setState(() {
+                                _showResults = false;
+                                _requested = true;
+                              });
+                              // await _requestCar(appcontext);
+                            },
+                          ),
                         ],
                       ),
                     )

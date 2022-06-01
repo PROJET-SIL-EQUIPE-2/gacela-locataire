@@ -155,14 +155,29 @@ class _SupportScreenState extends State<SupportScreen> {
                         }).toList(),
                       ),
                       const SizedBox(height: GacelaTheme.vDivider),
-                      gacelaTextFormField(
-                        hintText: "Message",
+                      TextFormField(
                         maxLines: 4,
+                        decoration: const InputDecoration(
+                          hintText: "Message",
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: GacelaColors.gacelaGrey,
+                          ),
+                        ),
                         validator: (value) => value!.isEmpty
                             ? "Le message est obligatoire"
                             : null,
                         onSaved: (value) => _message = value,
                       ),
+                      // gacelaTextFormField(
+                      //   hintText: "Message",
+                      //   maxLines: 5,
+                      //   validator: (value) => value!.isEmpty
+                      //       ? "Le message est obligatoire"
+                      //       : null,
+                      //   onSaved: (value) => _message = value,
+                      // ),
                       const SizedBox(height: 2 * GacelaTheme.vDivider),
                       _isLoading
                           ? const CircularProgressIndicator(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'edit_profile_screen.dart';
@@ -45,10 +46,11 @@ class ProfileScreen extends StatelessWidget {
                 "${auth.user?.email}",
                 style: Theme.of(context).textTheme.headline4,
               ),
-              trailing: const CircleAvatar(
+              trailing: CircleAvatar(
                 radius: 25,
                 backgroundColor: Colors.transparent,
-                backgroundImage: NetworkImage("https://i.pravatar.cc/300"),
+                backgroundImage: NetworkImage(
+                    "${dotenv.get("SERVER")}/${(Provider.of<AuthProvider>(context, listen: false).user?.personalPhoto as String).replaceAll('\\', '/')}.png"),
               ),
             ),
             const SizedBox(height: GacelaTheme.vDivider),
