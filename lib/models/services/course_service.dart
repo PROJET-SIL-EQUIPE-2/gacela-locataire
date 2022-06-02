@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:gacela_locataire/models/location.dart';
+import 'package:gacela_locataire/models/reservation.dart';
+import 'package:gacela_locataire/models/vehicule_type.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gacela_locataire/models/errors/failure.dart';
+
+import '../closest_vehicule.dart';
 
 class CourseService {
   /// create a car reservation for a Locataire
@@ -14,12 +19,12 @@ class CourseService {
   /// @param depart        depart position
   /// @param destination   destination position
   /// return true if the car is reserved succefully for the locataire else false
-  Future<Map<String, dynamic>> createReservation(
+  Future<Reservation> createReservation(
     String? token,
     String? email,
     String? matricule,
-    LatLng? depart,
-    LatLng? destination,
+    Location? depart,
+    Location? destination,
   ) async {
     final String url =
         '${dotenv.get("BASE_URL")}/reservations/create-reservation';
@@ -32,18 +37,17 @@ class CourseService {
           body: jsonEncode({
             "locataire": email,
             "matricule": matricule,
-            "departLat": depart?.latitude,
-            "departLong": depart?.longitude,
-            "destLat": destination?.latitude,
-            "destLong": destination?.longitude,
+            "departLat": depart?.lat,
+            "departLong": depart?.lng,
+            "destLat": destination?.lat,
+            "destLong": destination?.lng,
           }));
 
       if (response.statusCode == 201) {
         final data = json.decode(response.body);
-        print(response.body);
-        return data["reservation"];
+        return Reservation.fromJson(data["reservation"]);
       } else {
-        final data = jsonDecode(response.body);
+        // final data = jsonDecode(response.body);
         print(response.body);
         throw Failure("Il ya un erreur", code: response.statusCode);
       }
@@ -100,7 +104,6 @@ class CourseService {
   Future<Map<String, dynamic>> sendDemandeSupport(String? token,
       int? reservationId, String? typeSupport, String? message) async {
     final String url = '${dotenv.get("BASE_URL")}/supports/$reservationId';
-    print(url);
     try {
       final response = await http.post(Uri.parse(url),
           headers: {
@@ -115,6 +118,78 @@ class CourseService {
       } else {
         final data = jsonDecode(response.body);
         throw Failure(data["errors"][0]["msg"], code: response.statusCode);
+      }
+    } on SocketException {
+      throw Failure('No Internet connection 😑');
+    } on HttpException {
+      throw Failure("Couldn't find the post 😱");
+    } on FormatException {
+      throw Failure("Bad response format 👎");
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  /// Unlock a car for a Locataire
+  /// @param reservationId     car reservation id
+  /// @param code              code de verification
+  /// return true if the car is unlocked succefully else false
+  Future<List<VehiculeType>> getVehiculeTypes() async {
+    final String url = '${dotenv.get("BASE_URL")}/types';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body);
+        final data = result["data"] as List;
+        return data.map((type) => VehiculeType.fromJson(type)).toList();
+      } else {
+        final data = jsonDecode(response.body);
+        throw Failure(data["errors"][0]["msg"], code: response.statusCode);
+      }
+    } on SocketException {
+      throw Failure('No Internet connection 😑');
+    } on HttpException {
+      throw Failure("Couldn't find the post 😱");
+    } on FormatException {
+      throw Failure("Bad response format 👎");
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<ClosestVehicule?> searchClosestVehicule(
+      String type, Location depart, Location dest) async {
+    final String url = '${dotenv.get("BASE_URL")}/vehicles/search';
+    try {
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "type": type,
+            "departLat": depart.lat,
+            "departLong": depart.lng,
+            "destLat": dest.lat,
+            "destLong": dest.lng,
+          }));
+
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body);
+        final data = result["data"];
+        final closestVehiculeJson = data["closest"];
+        return ClosestVehicule.fromJson(
+            closestVehiculeJson, data["estimatedPrice"]);
+      } else {
+        final data = jsonDecode(response.body);
+        throw Failure(data["data"], code: response.statusCode);
       }
     } on SocketException {
       throw Failure('No Internet connection 😑');

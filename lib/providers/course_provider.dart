@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:gacela_locataire/models/geometry.dart';
+import 'package:gacela_locataire/models/location.dart';
+import 'package:gacela_locataire/models/place.dart';
+import 'package:gacela_locataire/models/place_search.dart';
+import 'package:gacela_locataire/models/reservation.dart';
 import 'package:gacela_locataire/models/services/course_service.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gacela_locataire/models/services/places_service.dart';
+import 'package:gacela_locataire/models/vehicule_type.dart';
+import 'package:geolocator/geolocator.dart';
+
+import '../models/closest_vehicule.dart';
+import '../models/services/geolocator_service.dart';
 
 class CourseProvider extends ChangeNotifier {
+  CourseProvider() {
+    setCurrentLocation();
+  }
+
   bool isUnlocked = false;
   String courseStatus = "none"; // waiting, incourse, none, finished
-  int? reservationId;
-
-  LatLng? depart = const LatLng(36.737232, 3.086472);
-  LatLng? destination = const LatLng(36.365, 6.61472);
-
-  String? carType = "comfort";
-  set setCarType(String? carType) {
-    this.carType = carType;
-  }
+  Reservation? currentReservation;
+  ClosestVehicule? closestVehicule;
 
   Future<void> unlockCar(
       String? token, int? reservationId, String? code) async {
@@ -23,29 +30,87 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future createReservation(
+  Future<void> createReservation(
     String? token,
     String? email,
     String? matricule,
   ) async {
     final CourseService courseService = CourseService();
     // currentReservation
-    final data = await courseService.createReservation(
-        token, email, matricule, depart, destination);
-    print(data);
-    reservationId = data["reservation_id"];
+    currentReservation = await courseService.createReservation(
+        token,
+        email,
+        matricule,
+        departPlace?.geometry.location,
+        destinationPlace?.geometry.location);
     notifyListeners();
-    return data["reservation_id"];
   }
 
   Future<Map<String, dynamic>> sendDemandeSupport(
       String? token, String? typeSupport, String? message) async {
     final CourseService courseService = CourseService();
-    print("\nhello reservation : $reservationId\n");
     // currentReservation
     final Map<String, dynamic> result = await courseService.sendDemandeSupport(
-        token, reservationId, typeSupport, message);
+        token, currentReservation?.reservationId, typeSupport, message);
 
     return result;
+  }
+
+  Future<List<VehiculeType>> getVehiculeTypes() async {
+    final CourseService courseService = CourseService();
+    return await courseService.getVehiculeTypes();
+  }
+
+  Future<void> searchClosestVehicule(String type) async {
+    final CourseService courseService = CourseService();
+    closestVehicule = await courseService.searchClosestVehicule(type,
+        departPlace!.geometry.location, destinationPlace!.geometry.location);
+    notifyListeners();
+  }
+
+  // geo location *************************************************
+  final GeolocatorService geolocatorService = GeolocatorService();
+  final PlacesService placesService = PlacesService();
+
+  Position? currentLocation;
+  List<PlaceSearch> searchResult = [];
+
+  Place? departPlace;
+  Place? destinationPlace;
+
+  Future<void> setCurrentLocation() async {
+    currentLocation = await geolocatorService.getCurrentLocation();
+    notifyListeners();
+  }
+
+  searchPlaces(String? searchTerm) async {
+    searchResult = await placesService.getAutoComplete(searchTerm);
+    notifyListeners();
+  }
+
+  getPlaceDetails(String placeId, bool isDepart) async {
+    Place? place = await placesService.getPlace(placeId);
+    if (isDepart) {
+      departPlace = place;
+    } else {
+      destinationPlace = place;
+    }
+    return place;
+  }
+
+  Future<Place> setCurrentLocationPlace(bool isDepart) async {
+    currentLocation ??= await geolocatorService.getCurrentLocation();
+    Place? place = Place(
+      geometry: Geometry(
+          location: Location(
+              lat: currentLocation!.latitude, lng: currentLocation!.longitude)),
+      name: "${currentLocation!.latitude}, ${currentLocation!.longitude}",
+    );
+    if (isDepart) {
+      departPlace = place;
+    } else {
+      destinationPlace = place;
+    }
+    return place;
   }
 }

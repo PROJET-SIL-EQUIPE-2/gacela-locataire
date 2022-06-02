@@ -3,6 +3,7 @@ import 'package:gacela_locataire/config/theme/colors.dart';
 import 'package:gacela_locataire/config/theme/theme.dart';
 import 'package:gacela_locataire/models/errors/failure.dart';
 import 'package:gacela_locataire/models/services/course_service.dart';
+import 'package:gacela_locataire/models/vehicule_type.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:gacela_locataire/providers/course_provider.dart';
 import 'package:gacela_locataire/views/screens/home/course/course_screen.dart';
@@ -25,21 +26,33 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
   bool _requested = false;
   bool _showResults = true;
 
+  String? errorMessage;
+
+  bool reservationLoading = false;
+
   @override
   Widget build(BuildContext context) {
     Future createReservation() async {
+      setState(() {
+        reservationLoading = true;
+      });
       try {
         await Provider.of<CourseProvider>(context, listen: false)
             .createReservation(
                 Provider.of<AuthProvider>(context, listen: false).token,
                 Provider.of<AuthProvider>(context, listen: false).user?.email,
-                "20012001");
+                Provider.of<CourseProvider>(context, listen: false)
+                    .closestVehicule
+                    ?.matricule);
         await Navigator.pushNamedAndRemoveUntil(
             context, CourseScreen.route, ModalRoute.withName('/search'));
       } on Failure catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.message)));
       }
+      setState(() {
+        reservationLoading = false;
+      });
     }
 
     return Scaffold(
@@ -49,10 +62,37 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: const GoogleMap(
-                zoomControlsEnabled: false,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(36.35, 6.6),
+              child: Consumer<CourseProvider>(
+                builder: (context, provider, child) => GoogleMap(
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                          provider.departPlace!.geometry.location.lat,
+                          provider.departPlace!.geometry.location.lng),
+                      zoom: 9),
+                  markers: {
+                    if (provider.departPlace != null)
+                      Marker(
+                          markerId: const MarkerId('depart'),
+                          position: LatLng(
+                              provider.departPlace!.geometry.location.lat,
+                              provider.departPlace!.geometry.location.lng)),
+                    if (provider.destinationPlace != null)
+                      Marker(
+                          markerId: const MarkerId('dest'),
+                          position: LatLng(
+                              provider.destinationPlace!.geometry.location.lat,
+                              provider
+                                  .destinationPlace!.geometry.location.lng)),
+                  },
+                  polylines: {
+                    Polyline(polylineId: const PolylineId('polyline'), points: [
+                      LatLng(provider.departPlace!.geometry.location.lat,
+                          provider.departPlace!.geometry.location.lng),
+                      LatLng(provider.destinationPlace!.geometry.location.lat,
+                          provider.destinationPlace!.geometry.location.lng)
+                    ])
+                  },
                 ),
               ),
             ),
@@ -87,7 +127,7 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                   children: [
                     Center(
                       child: Text(
-                        "Véhicules proches de vous",
+                        "Choose the type of the vehicule",
                         style: Theme.of(context).textTheme.headline3,
                       ),
                     ),
@@ -95,52 +135,56 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: GacelaTheme.hPadding),
-                      child: Column(
-                        children: [
-                          GacelaCarCard(
-                            carName: "Hyundai Accent",
-                            imageUrl: "",
-                            price: 200,
-                            time: "à 1 min près",
-                            type: "classic",
-                            onTap: () async {
-                              setState(() {
-                                _showResults = false;
-                                _requested = true;
-                              });
-                              // await _requestCar(appcontext);
-                            },
-                          ),
-                          GacelaCarCard(
-                            carName: "Hyundai Accent",
-                            imageUrl: "",
-                            price: 250,
-                            time: "à 1 min près",
-                            type: "Comfort",
-                            onTap: () async {
-                              setState(() {
-                                _showResults = false;
-                                _requested = true;
-                              });
-                              // await _requestCar(appcontext);
-                            },
-                          ),
-                          GacelaCarCard(
-                            carName: "Hyundai Accent",
-                            imageUrl: "Espace",
-                            price: 300,
-                            time: "à 1 min près",
-                            type: "comfort",
-                            onTap: () async {
-                              setState(() {
-                                _showResults = false;
-                                _requested = true;
-                              });
-                              // await _requestCar(appcontext);
-                            },
-                          ),
-                        ],
-                      ),
+                      child: FutureBuilder(
+                          future: Provider.of<CourseProvider>(context,
+                                  listen: false)
+                              .getVehiculeTypes(),
+                          builder: ((context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            if (snapshot.hasError) {
+                              return Text(
+                                snapshot.error.toString(),
+                                style: const TextStyle(
+                                    color: GacelaColors.gacelaRed),
+                              );
+                            }
+                            List<VehiculeType> types =
+                                snapshot.data as List<VehiculeType>;
+                            return Column(
+                              children: types
+                                  .map(
+                                    (vehiculeType) => GacelaCarCard(
+                                      carName: "Gacela Car",
+                                      imageUrl: "",
+                                      price: vehiculeType.pricePerHour!,
+                                      type: vehiculeType.type!,
+                                      onTap: () async {
+                                        setState(() {
+                                          _showResults = false;
+                                          _requested = true;
+                                          isLoading = true;
+                                        });
+                                        try {
+                                          await Provider.of<CourseProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .searchClosestVehicule(
+                                                  vehiculeType.type!);
+                                        } on Failure catch (f) {
+                                          errorMessage = f.toString();
+                                        }
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      },
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          })),
                     )
                   ],
                 ),
@@ -148,10 +192,10 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
             ),
           if (_requested)
             Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
                   padding: const EdgeInsets.only(top: GacelaTheme.vPadding),
                   decoration: const BoxDecoration(
                       color: GacelaColors.gacelaOrange,
@@ -159,124 +203,212 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
                       )),
-                  child: Wrap(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(GacelaTheme.hPadding),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Hyundai accent",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3!
-                                      .copyWith(
-                                        color: GacelaColors.gacelaDeepBlue,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                ),
-                                Row(
-                                  children: const [
-                                    Icon(Icons.camera_outlined),
-                                    Text("0234 5678 8939 16"),
-                                  ],
-                                )
-                              ],
-                            ),
-                            Image.asset("assets/images/hyunday.png"),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            topRight: Radius.circular(25),
+                  child: isLoading
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20.0, horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Searching for a car...",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 22),
+                              ),
+                              const SizedBox(height: GacelaTheme.vDivider),
+                              Text(
+                                "Depart: ${Provider.of<CourseProvider>(context).departPlace?.name}",
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                "Destination: ${Provider.of<CourseProvider>(context).destinationPlace?.name}",
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              const SizedBox(height: GacelaTheme.vDivider),
+                              const Center(
+                                  child: CircularProgressIndicator(
+                                color: Colors.white,
+                              )),
+                            ],
                           ),
-                        ),
-                        child: Column(
-                          children: [
-                            const SizedBox(height: GacelaTheme.vDivider),
-                            Text(
-                              "Attributs",
-                              textAlign: TextAlign.start,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline3!
-                                  .copyWith(
-                                    color: GacelaColors.gacelaDeepBlue,
-                                  ),
-                            ),
-                            const SizedBox(height: GacelaTheme.vDivider),
-                            Container(
-                              padding: const EdgeInsets.all(18),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                border: Border.all(
-                                    color: GacelaColors.gacelaDeepBlue,
-                                    width: 1),
-                              ),
-                              child: Column(
-                                children: [
-                                  const Icon(
-                                    Icons.chair,
-                                    size: 35,
-                                  ),
-                                  Text(
-                                    "Places",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline4!
-                                        .copyWith(
-                                          color: GacelaColors.gacelaDeepBlue,
-                                        ),
-                                  ),
-                                  Text(
-                                    "5",
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: GacelaTheme.hPadding,
-                                  vertical: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "120 DA",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline2!
-                                        .copyWith(
-                                          color: GacelaColors.gacelaDeepBlue,
-                                        ),
-                                  ),
-                                  gacelaButton(
-                                    onPressed: createReservation,
-                                    text: "Appeler",
-                                    color: GacelaColors.gacelaDeepBlue,
-                                    vPadding: 8,
-                                  ),
-                                ],
+                        )
+                      : errorMessage != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 30.0),
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
+                                alignment: Alignment.center,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                      topRight: Radius.circular(30),
+                                    )),
+                                child: Text(
+                                  errorMessage!,
+                                  style: const TextStyle(
+                                      color: GacelaColors.gacelaRed),
+                                ),
                               ),
                             )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
+                          : Consumer<CourseProvider>(
+                              builder: (context, provider, child) => Wrap(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(
+                                        GacelaTheme.hPadding),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Hyundai accent",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline3!
+                                                  .copyWith(
+                                                    color: GacelaColors
+                                                        .gacelaDeepBlue,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                    Icons.camera_outlined),
+                                                Text(
+                                                    " ${provider.closestVehicule?.matricule}"),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Image.asset(
+                                            "assets/images/hyunday.png"),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(25),
+                                        topRight: Radius.circular(25),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(
+                                            height: GacelaTheme.vDivider),
+                                        Text(
+                                          "Attributs",
+                                          textAlign: TextAlign.start,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline3!
+                                              .copyWith(
+                                                color:
+                                                    GacelaColors.gacelaDeepBlue,
+                                              ),
+                                        ),
+                                        const SizedBox(
+                                            height: GacelaTheme.vDivider),
+                                        Container(
+                                          padding: const EdgeInsets.all(18),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            border: Border.all(
+                                                color:
+                                                    GacelaColors.gacelaDeepBlue,
+                                                width: 1),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              const Icon(
+                                                Icons.chair,
+                                                size: 35,
+                                              ),
+                                              Text(
+                                                "Places",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4!
+                                                    .copyWith(
+                                                      color: GacelaColors
+                                                          .gacelaDeepBlue,
+                                                    ),
+                                              ),
+                                              Text(
+                                                "5",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: GacelaTheme.hPadding,
+                                              vertical: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "${provider.closestVehicule?.estimatedPrice?.toStringAsFixed(2)} DA",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline2!
+                                                    .copyWith(
+                                                      color: GacelaColors
+                                                          .gacelaDeepBlue,
+                                                    ),
+                                              ),
+                                              gacelaButton(
+                                                onPressed: createReservation,
+                                                text: "Appeler",
+                                                color:
+                                                    GacelaColors.gacelaDeepBlue,
+                                                vPadding: 8,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )),
+            ),
+          if (reservationLoading)
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.black26,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(color: Colors.white),
+                    SizedBox(height: 8),
+                    Text(
+                      "Loading...",
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -286,16 +418,14 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
 class GacelaCarCard extends StatelessWidget {
   final String imageUrl;
   final String carName;
-  final String time;
   final String type;
-  final double price;
+  final int price;
   final void Function()? onTap;
 
   const GacelaCarCard({
     Key? key,
     required this.imageUrl,
     required this.carName,
-    required this.time,
     required this.type,
     required this.price,
     required this.onTap,
@@ -337,22 +467,11 @@ class GacelaCarCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(carName),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time,
-                          color: GacelaColors.gacelaGrey,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          time,
-                          style: const TextStyle(
-                            color: GacelaColors.gacelaGrey,
-                          ),
-                        ),
-                      ],
-                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "self driving car",
+                      style: TextStyle(color: Colors.grey[500]),
+                    )
                   ],
                 ),
               ],
@@ -369,7 +488,7 @@ class GacelaCarCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 gacelaButton(
                   onPressed: null,
-                  text: "$price DA",
+                  text: "$price DA/h",
                   fontSize: 12,
                   hPadding: 6,
                   vPadding: 3,

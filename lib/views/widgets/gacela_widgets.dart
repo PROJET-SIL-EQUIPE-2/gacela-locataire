@@ -133,8 +133,10 @@ Widget gacelaTextFormField({
   String? value,
   Widget? prefix,
   int? maxLines = 1,
+  FocusNode? focusNode,
 }) =>
     TextFormField(
+      focusNode: focusNode,
       maxLength: maxLength,
       controller: controller,
       onChanged: onChanged,

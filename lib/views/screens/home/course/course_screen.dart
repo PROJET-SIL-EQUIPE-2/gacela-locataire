@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:gacela_locataire/models/errors/failure.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:gacela_locataire/providers/course_provider.dart';
@@ -7,6 +8,7 @@ import 'package:gacela_locataire/views/screens/home/support/support_screen.dart'
 import 'package:gacela_locataire/views/screens/navigators.dart';
 import 'package:gacela_locataire/views/widgets/gacela_course.dart';
 import 'package:provider/provider.dart';
+import '../../../../providers/payment_provider.dart';
 import '../../../widgets.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/theme.dart';
@@ -146,7 +148,7 @@ class _CourseScreenState extends State<CourseScreen> {
           elevation: 0,
           backgroundColor: Colors.white,
           title: Text(
-            "Courses",
+            "Course",
             style: Theme.of(context).textTheme.headline2,
           ),
           leading: IconButton(
@@ -175,101 +177,114 @@ class _CourseScreenState extends State<CourseScreen> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: GacelaTheme.hPadding),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(
-                        left: GacelaTheme.vDivider + 10,
-                        top: GacelaTheme.hPadding - 2),
-                  ),
-                  gacelaDetails(
-                      title: "HyundayAccent",
-                      img: Image.asset("assets/images/hyunday.png"),
-                      type: "confortable",
-                      text1: "0234567895542",
-                      text2: "120 DA/h"),
-                  const SizedBox(height: GacelaTheme.vDivider + 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      gacelaCard(
-                        color: GacelaColors.gacelaBlueGray,
-                        width: screenSize.width * 0.4,
-                        height: screenSize.width * 0.4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              "Estimation vers",
-                              style: TextStyle(
-                                  color: GacelaColors.gacelaDeepBlue,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  fontFamily: 'popins'),
-                            ),
-                            Text(
-                              "Oued smar",
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              "100 DA",
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                      gacelaCard(
-                        color: GacelaColors.gacelaBlueGray,
-                        width: screenSize.width * 0.4,
-                        height: screenSize.width * 0.4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: GacelaTheme.vDivider + 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: gacelaButton1(
-                      onPressed: () {},
-                      text: "Méthode paiment..........5842",
-                      img: Image.asset(
-                        "assets/images/edahabia.png",
-                        height: 20,
-                        width: 60,
-                      ),
-                      color: GacelaColors.gacelaGrey,
+              child: Consumer<CourseProvider>(
+                builder: (context, provider, _) => Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: GacelaTheme.vDivider + 10,
+                          top: GacelaTheme.hPadding - 2),
                     ),
-                  ),
-                  const SizedBox(height: GacelaTheme.vDivider + 10),
-                  Consumer<CourseProvider>(
-                    builder: (_, course, __) => course.isUnlocked
-                        ? Text(
-                            "La voiture est ouverte vous pouvez monter",
-                            textAlign: TextAlign.center,
-                            style:
-                                Theme.of(context).textTheme.headline3!.copyWith(
-                                      color: GacelaColors.gacelaGreen,
-                                    ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            child: gacelaButton(
-                              onPressed: _unlockDialog,
-                              text: "Débloquer",
-                              icon: const Icon(
-                                Icons.lock_open_outlined,
+                    gacelaDetails(
+                        title: "HyundayAccent",
+                        img: Image.asset("assets/images/hyunday.png"),
+                        type: "${provider.currentReservation?.etat}",
+                        text1: "${provider.closestVehicule?.matricule}",
+                        text2:
+                            "Identifiant: #${provider.currentReservation?.reservationId}"),
+                    const SizedBox(height: GacelaTheme.vDivider + 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        gacelaCard(
+                          color: GacelaColors.gacelaBlueGray,
+                          width: screenSize.width * 0.4,
+                          height: screenSize.width * 0.4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Estimation vers",
+                                style: TextStyle(
+                                    color: GacelaColors.gacelaDeepBlue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    fontFamily: 'popins'),
                               ),
-                              // IconData(0xe3b0, fontFamily: 'MaterialIcons'),
-                              color: GacelaColors.gacelaDeepBlue,
-                            ),
+                              Text(
+                                "${provider.destinationPlace?.name}",
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                "${provider.closestVehicule?.estimatedPrice?.toStringAsFixed(2)} DA",
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
-                  ),
-                ],
+                        ),
+                        gacelaCard(
+                          color: GacelaColors.gacelaBlueGray,
+                          width: screenSize.width * 0.4,
+                          height: screenSize.width * 0.4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: GacelaTheme.vDivider + 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: gacelaButton1(
+                        onPressed: () async {
+                          final PaymentController controller =
+                              PaymentController();
+                          controller.makePayment(
+                              amount: provider.closestVehicule!.estimatedPrice!
+                                  .toStringAsFixed(0),
+                              currency: 'USD');
+                        },
+                        text: "Payment",
+                        img: Image.asset(
+                          "assets/images/edahabia.png",
+                          height: 20,
+                          width: 60,
+                        ),
+                        color: GacelaColors.gacelaGrey,
+                      ),
+                    ),
+                    const SizedBox(height: GacelaTheme.vDivider + 10),
+                    Consumer<CourseProvider>(
+                      builder: (_, course, __) => course.isUnlocked
+                          ? Text(
+                              "La voiture est ouverte vous pouvez monter",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3!
+                                  .copyWith(
+                                    color: GacelaColors.gacelaGreen,
+                                  ),
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
+                              child: gacelaButton(
+                                onPressed: _unlockDialog,
+                                text: "Débloquer",
+                                icon: const Icon(
+                                  Icons.lock_open_outlined,
+                                ),
+                                // IconData(0xe3b0, fontFamily: 'MaterialIcons'),
+                                color: GacelaColors.gacelaDeepBlue,
+                              ),
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
             if (isLoading)

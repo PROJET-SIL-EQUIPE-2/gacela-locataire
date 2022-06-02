@@ -49,8 +49,12 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _systemBackButtonPressed,
-      child: ChangeNotifierProvider<CourseProvider>(
-        create: (context) => CourseProvider(),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<CourseProvider>(
+            create: (context) => CourseProvider(),
+          ),
+        ],
         child: Scaffold(
           bottomNavigationBar: Container(
             clipBehavior: Clip.hardEdge,
@@ -85,8 +89,9 @@ class _MainScreenState extends State<MainScreen> {
               ],
               currentIndex: _currentIndex,
               onTap: (index) {
-                if (index != _currentIndex)
+                if (index != _currentIndex) {
                   setState(() => _currentIndex = index);
+                }
               },
             ),
           ),

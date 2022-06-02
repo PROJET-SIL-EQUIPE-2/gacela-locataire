@@ -111,10 +111,7 @@ class TransactionsScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {
-                print(Provider.of<CourseProvider>(context, listen: false)
-                    .reservationId);
-              },
+              onPressed: () {},
               icon: const Icon(
                 Icons.notifications_none_rounded,
                 color: Colors.black,

@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:gacela_locataire/providers/course_provider.dart';
+import 'package:gacela_locataire/providers/payment_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -30,10 +32,27 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: GoogleMap(
-                zoomControlsEnabled: false,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(36.35, 6.6),
+              child: Consumer<CourseProvider>(
+                builder: (context, courseProivder, _) => GoogleMap(
+                  myLocationEnabled: true,
+                  zoomControlsEnabled: false,
+                  markers: {
+                    if (courseProivder.currentLocation != null)
+                      Marker(
+                        markerId: MarkerId('current position'),
+                        position: LatLng(
+                            courseProivder.currentLocation!.latitude,
+                            courseProivder.currentLocation!.longitude),
+                      ),
+                  },
+                  initialCameraPosition: CameraPosition(
+                    target: courseProivder.currentLocation == null
+                        ? LatLng(36.35, 6.6)
+                        : LatLng(courseProivder.currentLocation!.latitude,
+                            courseProivder.currentLocation!.longitude),
+                    zoom: 14,
+                  ),
+                  compassEnabled: true,
                 ),
               ),
             ),
@@ -48,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icons.notifications_none,
                     size: 30,
                   ),
-                  onTap: () async =>
-                      Navigator.pushNamed(context, NotificationsScreen.route),
+                  onTap: () async => await Navigator.pushNamed(
+                      context, NotificationsScreen.route),
                 ),
                 const SizedBox(width: 10),
                 GacelaIconButton(

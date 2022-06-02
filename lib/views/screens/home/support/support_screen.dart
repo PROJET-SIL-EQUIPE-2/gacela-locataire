@@ -84,10 +84,6 @@ class _SupportScreenState extends State<SupportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("My reservation" +
-        Provider.of<CourseProvider>(context, listen: false)
-            .reservationId
-            .toString());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
