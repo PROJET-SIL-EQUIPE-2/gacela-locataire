@@ -236,53 +236,81 @@ class _CourseScreenState extends State<CourseScreen> {
                       ],
                     ),
                     const SizedBox(height: GacelaTheme.vDivider + 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                      child: gacelaButton1(
-                        onPressed: () async {
-                          final PaymentController controller =
-                              PaymentController();
-                          controller.makePayment(
-                              amount: provider.closestVehicule!.estimatedPrice!
-                                  .toStringAsFixed(0),
-                              currency: 'USD',
-                              reservationId:
-                                  provider.currentReservation?.reservationId);
-                        },
-                        text: "Payment",
-                        img: Image.asset(
-                          "assets/images/edahabia.png",
-                          height: 20,
-                          width: 60,
-                        ),
-                        color: GacelaColors.gacelaGrey,
-                      ),
-                    ),
+                    Consumer<CourseProvider>(builder: (context, provider, _) {
+                      if (!provider.isPayed) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          child: gacelaButton1(
+                            onPressed: provider.makePayment,
+                            text: "Payment",
+                            img: Image.asset(
+                              "assets/images/edahabia.png",
+                              height: 20,
+                              width: 60,
+                            ),
+                            color: GacelaColors.gacelaGrey,
+                          ),
+                        );
+                      } else {
+                        return Column(
+                          children: const [
+                            Text(
+                              "Your reservation is payed",
+                              style: TextStyle(
+                                color: GacelaColors.gacelaGreen,
+                              ),
+                            ),
+                            Text(
+                                "Our car is in way to you, remember to unlock the car")
+                          ],
+                        );
+                      }
+                    }),
                     const SizedBox(height: GacelaTheme.vDivider + 10),
                     Consumer<CourseProvider>(
                       builder: (_, course, __) => course.isUnlocked
-                          ? Text(
-                              "La voiture est ouverte vous pouvez monter",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline3!
-                                  .copyWith(
-                                    color: GacelaColors.gacelaGreen,
-                                  ),
-                            )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2),
-                              child: gacelaButton(
-                                onPressed: _unlockDialog,
-                                text: "Débloquer",
-                                icon: const Icon(
-                                  Icons.lock_open_outlined,
+                          ? Column(
+                              children: [
+                                const Center(
+                                    child: Icon(
+                                  Icons.lock_open,
+                                  size: 40,
+                                )),
+                                const SizedBox(height: GacelaTheme.vDivider),
+                                Text(
+                                  "La voiture est ouverte vous pouvez monter",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3!
+                                      .copyWith(
+                                        color: GacelaColors.gacelaGreen,
+                                      ),
                                 ),
-                                // IconData(0xe3b0, fontFamily: 'MaterialIcons'),
-                                color: GacelaColors.gacelaDeepBlue,
-                              ),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                const Center(
+                                    child: Icon(
+                                  Icons.lock,
+                                  size: 40,
+                                )),
+                                const SizedBox(height: GacelaTheme.vDivider),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 2),
+                                  child: gacelaButton(
+                                    onPressed: _unlockDialog,
+                                    text: "Débloquer",
+                                    icon: const Icon(
+                                      Icons.lock_open_outlined,
+                                    ),
+                                    // IconData(0xe3b0, fontFamily: 'MaterialIcons'),
+                                    color: GacelaColors.gacelaDeepBlue,
+                                  ),
+                                ),
+                              ],
                             ),
                     ),
                   ],
