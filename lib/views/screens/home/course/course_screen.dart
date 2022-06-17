@@ -245,7 +245,9 @@ class _CourseScreenState extends State<CourseScreen> {
                           controller.makePayment(
                               amount: provider.closestVehicule!.estimatedPrice!
                                   .toStringAsFixed(0),
-                              currency: 'USD');
+                              currency: 'USD',
+                              reservationId:
+                                  provider.currentReservation?.reservationId);
                         },
                         text: "Payment",
                         img: Image.asset(

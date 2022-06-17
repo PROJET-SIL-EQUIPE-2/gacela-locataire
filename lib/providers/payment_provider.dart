@@ -1,12 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/errors/failure.dart';
 
 class PaymentController {
   Map<String, dynamic>? paymentIntentData;
 
   Future<void> makePayment(
-      {required String amount, required String currency}) async {
+      {required String amount,
+      required String currency,
+      required int? reservationId}) async {
     try {
       paymentIntentData = await createPaymentIntent(amount, currency);
       print(paymentIntentData);
@@ -22,16 +28,19 @@ class PaymentController {
           paymentIntentClientSecret: paymentIntentData!['client_secret'],
           customerEphemeralKeySecret: paymentIntentData!['ephemeralKey'],
         ));
-        displayPaymentSheet();
+        displayPaymentSheet(reservationId, amount);
       }
     } catch (e, s) {
       print('exception:$e$s');
     }
   }
 
-  displayPaymentSheet() async {
+  displayPaymentSheet(int? reservationId, String amount) async {
     try {
       await Stripe.instance.presentPaymentSheet();
+      // the payment succeded
+      // TODO: Make the request to gacela backend
+      await pushPaymentDetails(reservationId, amount);
     } on Exception catch (e) {
       if (e is StripeException) {
         print("Error from Stripe: ${e.error.localizedMessage}");
@@ -68,5 +77,36 @@ class PaymentController {
   calculateAmount(String amount) {
     final a = (int.parse(amount)) * 100;
     return a.toString();
+  }
+
+  Future<void> pushPaymentDetails(int? reservationId, String? amount) async {
+    final String url = '${dotenv.get("BASE_URL")}/payment/checkout';
+    try {
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "reservation_id": reservationId,
+            "amount": amount,
+          }));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return;
+      } else {
+        final data = jsonDecode(response.body);
+        throw Failure(data["errors"][0]["msg"], code: response.statusCode);
+      }
+    } on SocketException {
+      throw Failure('No Internet connection 😑');
+    } on HttpException {
+      throw Failure("Couldn't find the post 😱");
+    } on FormatException {
+      throw Failure("Bad response format 👎");
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 }
