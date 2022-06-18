@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gacela_locataire/models/transaction.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
@@ -120,6 +121,42 @@ class AuthService {
       } else {
         final data = jsonDecode(response.body);
         throw Failure(data["message"], code: response.statusCode);
+      }
+    } on SocketException {
+      throw Failure('No Internet connection 😑');
+    } on HttpException {
+      throw Failure("Couldn't find the post 😱");
+    } on FormatException {
+      throw Failure("Bad response format 👎");
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<List<Transaction>> getTransactions(String? email) async {
+    final String url = '${dotenv.get("BASE_URL")}/reservations/history';
+    try {
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "locataire_email": email,
+          }));
+
+      if (response.statusCode == 200) {
+        final res = json.decode(response.body);
+        final List transactionsAsMap = res["data"] as List;
+        final List<Transaction> transactionsList = [];
+        for (var trans in transactionsAsMap) {
+          transactionsList
+              .add(Transaction.fromJson(trans, trans["vehicule"]["matricule"]));
+        }
+        return transactionsList;
+      } else {
+        final data = jsonDecode(response.body);
+        throw Failure(data.toString(), code: response.statusCode);
       }
     } on SocketException {
       throw Failure('No Internet connection 😑');

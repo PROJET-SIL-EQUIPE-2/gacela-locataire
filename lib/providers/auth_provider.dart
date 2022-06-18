@@ -1,3 +1,5 @@
+import 'package:gacela_locataire/models/transaction.dart';
+
 import 'abstract_provider.dart';
 import '../models/notifier_state.dart';
 import '../models/locataire.dart';
@@ -129,5 +131,12 @@ class AuthProvider extends AbstractProvider {
       setProviderFailure(f);
     }
     setProviderState(NotifierState.loaded);
+  }
+
+  List<Transaction> transactionsList = [];
+  Future<void> getTransactions() async {
+    AuthService authService = AuthService();
+    transactionsList = await authService.getTransactions(user?.email);
+    notifyListeners();
   }
 }

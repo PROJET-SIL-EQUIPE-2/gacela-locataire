@@ -8,15 +8,25 @@ import 'package:provider/provider.dart';
 import '../../../config/theme/theme.dart';
 import '../../../config/theme/colors.dart';
 
-class TransactionsScreen extends StatelessWidget {
+class TransactionsScreen extends StatefulWidget {
   static const route = "/";
   const TransactionsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<TransactionsScreen> createState() => _TransactionsScreenState();
+}
+
+class _TransactionsScreenState extends State<TransactionsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<AuthProvider>(context, listen: false).getTransactions();
+  }
 
   Widget gacelaCard({
     required String image,
     required String carName,
     required DateTime date,
-    required int duration,
     required int price,
   }) {
     String formattedDate = DateFormat("hh:mm | dd MMMM").format(date);
@@ -60,22 +70,6 @@ class TransactionsScreen extends StatelessWidget {
                     style: const TextStyle(
                       color: GacelaColors.gacelaGrey,
                     ),
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.access_time,
-                        size: 15,
-                        color: GacelaColors.gacelaGrey,
-                      ),
-                      Text(
-                        " $duration min",
-                        style: const TextStyle(
-                          color: GacelaColors.gacelaGrey,
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
@@ -146,48 +140,21 @@ class TransactionsScreen extends StatelessWidget {
                         .headline2!
                         .copyWith(color: GacelaColors.gacelaDeepBlue)),
                 const SizedBox(height: GacelaTheme.vDivider),
-                gacelaCard(
-                    image: "http://via.placeholder.com/640x360",
-                    carName: "Hyundai Accent",
-                    date: DateTime(2022, 3, 10, 10, 48),
-                    duration: 40,
-                    price: 40),
-                gacelaCard(
-                    image: "http://via.placeholder.com/640x360",
-                    carName: "Hyundai Accent",
-                    date: DateTime(2022, 3, 10, 10, 48),
-                    duration: 40,
-                    price: 40),
-                gacelaCard(
-                    image: "http://via.placeholder.com/640x360",
-                    carName: "Hyundai Accent",
-                    date: DateTime(2022, 3, 10, 10, 48),
-                    duration: 40,
-                    price: 40),
-                gacelaCard(
-                    image: "http://via.placeholder.com/640x360",
-                    carName: "Hyundai Accent",
-                    date: DateTime(2022, 3, 10, 10, 48),
-                    duration: 40,
-                    price: 40),
-                gacelaCard(
-                    image: "http://via.placeholder.com/640x360",
-                    carName: "Hyundai Accent",
-                    date: DateTime(2022, 3, 10, 10, 48),
-                    duration: 40,
-                    price: 40),
-                gacelaCard(
-                    image: "http://via.placeholder.com/640x360",
-                    carName: "Hyundai Accent",
-                    date: DateTime(2022, 3, 10, 10, 48),
-                    duration: 40,
-                    price: 40),
-                gacelaCard(
-                    image: "http://via.placeholder.com/640x360",
-                    carName: "Hyundai Accent",
-                    date: DateTime(2022, 3, 10, 10, 48),
-                    duration: 40,
-                    price: 40),
+                Consumer<AuthProvider>(builder: (context, provider, _) {
+                  return provider.transactionsList.isEmpty
+                      ? const Center(child: Text("No transaction found"))
+                      : Column(
+                          children: provider.transactionsList
+                              .map(
+                                (trans) => gacelaCard(
+                                    image: "http://via.placeholder.com/640x360",
+                                    carName: "Gacela Car",
+                                    date: trans.dateReservation!.toUtc(),
+                                    price: 40),
+                              )
+                              .toList(),
+                        );
+                })
               ],
             ),
           ),
