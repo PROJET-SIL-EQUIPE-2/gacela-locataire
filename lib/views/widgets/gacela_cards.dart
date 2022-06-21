@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../config/theme/colors.dart';
 
 Widget gacelaCard({
@@ -25,7 +25,9 @@ Widget gacelaCard({
 Widget gacelaNotificationTile({
   bool isNew = false,
   required String title,
+  required String reply,
   required String description,
+  required DateTime? date,
   void Function()? onTap,
 }) =>
     ListTile(
@@ -40,15 +42,15 @@ Widget gacelaNotificationTile({
             description,
             style: const TextStyle(fontSize: 12),
           ),
-          const Text(
-            "Voir details >",
-            style: TextStyle(color: GacelaColors.gacelaBlue, fontSize: 12),
+          Text(
+            reply,
+            style: const TextStyle(color: GacelaColors.gacelaBlue),
           )
         ],
       ),
-      trailing: const Text(
-        "à l'instant",
-        style: TextStyle(color: GacelaColors.gacelaRed, fontSize: 12),
+      trailing: Text(
+        DateFormat("yyyy/MM/dd - hh:mm").format(date ?? DateTime.now()),
+        style: const TextStyle(color: GacelaColors.gacelaRed, fontSize: 12),
       ),
       leading: const Icon(Icons.error_outline_rounded),
     );

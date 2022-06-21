@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:gacela_locataire/providers/course_provider.dart';
 import 'package:gacela_locataire/providers/payment_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../providers/auth_provider.dart';
 import './profile/profile_screen.dart';
 import 'notifications_screen.dart';
 import 'search_screen.dart';
@@ -74,7 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 GacelaIconButton(
                   child: CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage("https://i.pravatar.cc/300"),
+                    backgroundColor: Colors.transparent,
+                    onBackgroundImageError: (_, __) =>
+                        Image.asset('assets/images/placeholder-image.png'),
+                    backgroundImage: NetworkImage(
+                      "${dotenv.get("SERVER")}/${(Provider.of<AuthProvider>(context, listen: false).user?.personalPhoto as String).replaceAll('\\', '/')}.png",
+                    ),
                   ),
                   onTap: () async =>
                       Navigator.pushNamed(context, ProfileScreen.route),

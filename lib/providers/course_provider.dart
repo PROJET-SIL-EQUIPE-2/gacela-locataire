@@ -6,6 +6,7 @@ import 'package:gacela_locataire/models/place_search.dart';
 import 'package:gacela_locataire/models/reservation.dart';
 import 'package:gacela_locataire/models/services/course_service.dart';
 import 'package:gacela_locataire/models/services/places_service.dart';
+import 'package:gacela_locataire/models/support_reply.dart';
 import 'package:gacela_locataire/models/vehicule_type.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -112,5 +113,17 @@ class CourseProvider extends ChangeNotifier {
       destinationPlace = place;
     }
     return place;
+  }
+
+  List<SupportReply> replies = [];
+
+  Future<void> getSupportReply(int? locataireId) async {
+    try {
+      final CourseService courseService = CourseService();
+      replies = await courseService.getSupportReply(locataireId);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 }

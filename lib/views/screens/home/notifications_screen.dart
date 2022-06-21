@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:gacela_locataire/providers/auth_provider.dart';
+import 'package:gacela_locataire/providers/course_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../config/theme/colors.dart';
 import '../../widgets.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   static const route = "/notifications";
   const NotificationsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<CourseProvider>(context, listen: false).getSupportReply(
+        Provider.of<AuthProvider>(context, listen: false).user?.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,52 +51,37 @@ class NotificationsScreen extends StatelessWidget {
           ),
         ),
         body: TabBarView(children: [
-          ListView(
-            children: [
-              gacelaNotificationTile(
-                isNew: true,
-                title: "Obstacle",
-                description:
-                    "l’automobile N05 est bloqué dans le boulevard de HASSIBA Ben Bouali rue N16 ...",
-                onTap: () {},
-              ),
-              gacelaNotificationTile(
-                isNew: false,
-                title: "Obstacle",
-                description:
-                    "l’automobile N05 est bloqué dans le boulevard de HASSIBA Ben Bouali rue N16 ...",
-                onTap: () {},
-              ),
-              gacelaNotificationTile(
-                isNew: false,
-                title: "Obstacle",
-                description:
-                    "l’automobile N05 est bloqué dans le boulevard de HASSIBA Ben Bouali rue N16 ...",
-                onTap: () {},
-              ),
-            ],
+          Consumer<CourseProvider>(
+            builder: (context, courseProvider, child) => ListView(
+              children: courseProvider.replies
+                  .map(
+                    (reply) => gacelaNotificationTile(
+                      isNew: true,
+                      title: "${reply.typeSupport}",
+                      description: "${reply.supportMessage}",
+                      reply: "${reply.reply}",
+                      date: reply.date,
+                      onTap: () {},
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
-          ListView(
-            children: [
-              gacelaNotificationTile(
-                title: "Obstacle",
-                description:
-                    "l’automobile N05 est bloqué dans le boulevard de HASSIBA Ben Bouali rue N16 ...",
-                onTap: () {},
-              ),
-              gacelaNotificationTile(
-                title: "Obstacle",
-                description:
-                    "l’automobile N05 est bloqué dans le boulevard de HASSIBA Ben Bouali rue N16 ...",
-                onTap: () {},
-              ),
-              gacelaNotificationTile(
-                title: "Obstacle",
-                description:
-                    "l’automobile N05 est bloqué dans le boulevard de HASSIBA Ben Bouali rue N16 ...",
-                onTap: () {},
-              ),
-            ],
+          Consumer<CourseProvider>(
+            builder: (context, courseProvider, child) => ListView(
+              children: courseProvider.replies
+                  .map(
+                    (reply) => gacelaNotificationTile(
+                      isNew: true,
+                      title: "${reply.typeSupport}",
+                      description: "${reply.supportMessage}",
+                      reply: "${reply.reply}",
+                      date: reply.date,
+                      onTap: () {},
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         ]),
       ),

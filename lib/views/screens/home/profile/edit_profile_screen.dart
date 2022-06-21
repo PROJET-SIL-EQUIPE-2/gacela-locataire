@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gacela_locataire/models/errors/failure.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -190,14 +191,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 color: GacelaColors.gacelaLightPurple,
                 child: Column(
                   children: [
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: GacelaTheme.vPadding),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: GacelaTheme.vPadding),
                       child: CircleAvatar(
                         radius: 25,
-                        backgroundColor: Colors.white,
-                        backgroundImage:
-                            NetworkImage("https://i.pravatar.cc/300"),
+                        backgroundColor: Colors.transparent,
+                        onBackgroundImageError: (_, __) =>
+                            Image.asset('assets/images/placeholder-image.png'),
+                        backgroundImage: NetworkImage(
+                          "${dotenv.get("SERVER")}/${(Provider.of<AuthProvider>(context, listen: false).user?.personalPhoto as String).replaceAll('\\', '/')}.png",
+                        ),
                       ),
                     ),
                     const Divider(height: 1, color: GacelaColors.gacelaPurple),

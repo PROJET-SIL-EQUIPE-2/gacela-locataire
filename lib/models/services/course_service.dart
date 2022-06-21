@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:gacela_locataire/models/location.dart';
 import 'package:gacela_locataire/models/reservation.dart';
+import 'package:gacela_locataire/models/support_reply.dart';
 import 'package:gacela_locataire/models/vehicule_type.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -187,6 +188,48 @@ class CourseService {
         final closestVehiculeJson = data["closest"];
         return ClosestVehicule.fromJson(
             closestVehiculeJson, data["estimatedPrice"]);
+      } else {
+        final data = jsonDecode(response.body);
+        throw Failure(data["data"], code: response.statusCode);
+      }
+    } on SocketException {
+      throw Failure('No Internet connection 😑');
+    } on HttpException {
+      throw Failure("Couldn't find the post 😱");
+    } on FormatException {
+      throw Failure("Bad response format 👎");
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<List<SupportReply>> getSupportReply(int? locataireId) async {
+    final String url = '${dotenv.get("BASE_URL")}/supports/reply/$locataireId';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body);
+        final replies = result["replies"];
+        final List<SupportReply> supportReplies = [];
+        for (Map<String, dynamic> reply in replies) {
+          supportReplies.add(
+            SupportReply(
+              reply: reply["message"],
+              supportMessage: reply["DemandesSupport"]["message"],
+              typeSupport: reply["DemandesSupport"]["type_support"],
+              date: DateTime.tryParse(reply["DemandesSupport"]["date_demande"])
+                  ?.toUtc(),
+            ),
+          );
+        }
+        return supportReplies;
       } else {
         final data = jsonDecode(response.body);
         throw Failure(data["data"], code: response.statusCode);

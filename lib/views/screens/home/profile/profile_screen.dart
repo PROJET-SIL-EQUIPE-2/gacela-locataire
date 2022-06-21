@@ -49,8 +49,11 @@ class ProfileScreen extends StatelessWidget {
               trailing: CircleAvatar(
                 radius: 25,
                 backgroundColor: Colors.transparent,
+                onBackgroundImageError: (_, __) =>
+                    Image.asset('assets/images/placeholder-image.png'),
                 backgroundImage: NetworkImage(
-                    "${dotenv.get("SERVER")}/${(Provider.of<AuthProvider>(context, listen: false).user?.personalPhoto as String).replaceAll('\\', '/')}.png"),
+                  "${dotenv.get("SERVER")}/${(Provider.of<AuthProvider>(context, listen: false).user?.personalPhoto as String).replaceAll('\\', '/')}.png",
+                ),
               ),
             ),
             const SizedBox(height: GacelaTheme.vDivider),
