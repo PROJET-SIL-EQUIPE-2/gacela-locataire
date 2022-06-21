@@ -12,6 +12,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../models/closest_vehicule.dart';
 import '../models/services/geolocator_service.dart';
+import 'payment_provider.dart';
 
 class CourseProvider extends ChangeNotifier {
   CourseProvider() {
@@ -22,6 +23,7 @@ class CourseProvider extends ChangeNotifier {
   String courseStatus = "none"; // waiting, incourse, none, finished
   Reservation? currentReservation;
   ClosestVehicule? closestVehicule;
+  bool isPayed = false;
 
   Future<void> unlockCar(
       String? token, int? reservationId, String? code) async {
@@ -113,6 +115,25 @@ class CourseProvider extends ChangeNotifier {
       destinationPlace = place;
     }
     return place;
+  }
+
+  Future<void> makePayment() async {
+    final PaymentController controller = PaymentController();
+    try {
+      bool isDonne = await controller.makePayment(
+          amount: closestVehicule!.estimatedPrice!.toStringAsFixed(0),
+          currency: 'USD',
+          reservationId: currentReservation?.reservationId);
+
+      if (isDonne) {
+        isPayed = true;
+      } else {
+        isPayed = false;
+      }
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   List<SupportReply> replies = [];
