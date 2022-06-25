@@ -3,6 +3,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:gacela_locataire/models/errors/failure.dart';
 import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:gacela_locataire/providers/course_provider.dart';
+import 'package:gacela_locataire/views/screens/home/course/track_car_screen.dart';
 import 'package:gacela_locataire/views/screens/home/home_screen.dart';
 import 'package:gacela_locataire/views/screens/home/support/support_screen.dart';
 import 'package:gacela_locataire/views/screens/navigators.dart';
@@ -76,7 +77,11 @@ class _CourseScreenState extends State<CourseScreen> {
     setState(() => isLoading = true);
     try {
       await Provider.of<CourseProvider>(context, listen: false).unlockCar(
-          Provider.of<AuthProvider>(context, listen: false).token, 13, code);
+          Provider.of<AuthProvider>(context, listen: false).token,
+          Provider.of<CourseProvider>(context, listen: false)
+              .currentReservation
+              ?.reservationId,
+          code);
       // await Future.delayed(const Duration(seconds: 2));
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -171,170 +176,189 @@ class _CourseScreenState extends State<CourseScreen> {
             ),
           ],
         ),
-        body: Stack(
-          alignment: Alignment.center,
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: GacelaTheme.hPadding),
-              child: Consumer<CourseProvider>(
-                builder: (context, provider, _) => Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: GacelaTheme.vDivider + 10,
-                          top: GacelaTheme.hPadding - 2),
-                    ),
-                    gacelaDetails(
-                        title: "HyundayAccent",
-                        img: Image.asset("assets/images/hyunday.png"),
-                        type: "${provider.currentReservation?.etat}",
-                        text1: "${provider.closestVehicule?.matricule}",
-                        text2:
-                            "Identifiant: #${provider.currentReservation?.reservationId}"),
-                    const SizedBox(height: GacelaTheme.vDivider + 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        gacelaCard(
-                          color: GacelaColors.gacelaBlueGray,
-                          width: screenSize.width * 0.4,
-                          height: screenSize.width * 0.4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Estimation vers",
-                                style: TextStyle(
-                                    color: GacelaColors.gacelaDeepBlue,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    fontFamily: 'popins'),
-                              ),
-                              Text(
-                                "${provider.destinationPlace?.name}",
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                "${provider.closestVehicule?.estimatedPrice?.toStringAsFixed(2)} DA",
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                        gacelaCard(
-                          color: GacelaColors.gacelaBlueGray,
-                          width: screenSize.width * 0.4,
-                          height: screenSize.width * 0.4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: GacelaTheme.vDivider + 10),
-                    Consumer<CourseProvider>(builder: (context, provider, _) {
-                      if (!provider.isPayed) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2),
-                          child: gacelaButton1(
-                            onPressed: provider.makePayment,
-                            text: "Payment",
-                            img: Image.asset(
-                              "assets/images/edahabia.png",
-                              height: 20,
-                              width: 60,
-                            ),
-                            color: GacelaColors.gacelaGrey,
-                          ),
-                        );
-                      } else {
-                        return Column(
-                          children: const [
-                            Text(
-                              "Your reservation is payed",
-                              style: TextStyle(
-                                color: GacelaColors.gacelaGreen,
-                              ),
-                            ),
-                            Text(
-                                "Our car is in way to you, remember to unlock the car")
-                          ],
-                        );
-                      }
-                    }),
-                    const SizedBox(height: GacelaTheme.vDivider + 10),
-                    Consumer<CourseProvider>(
-                      builder: (_, course, __) => course.isUnlocked
-                          ? Column(
+        body: SingleChildScrollView(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: GacelaTheme.hPadding),
+                child: Consumer<CourseProvider>(
+                  builder: (context, provider, _) => Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                            left: GacelaTheme.vDivider + 10,
+                            top: GacelaTheme.hPadding - 2),
+                      ),
+                      gacelaDetails(
+                          title: "Gacela Car",
+                          img: Image.asset("assets/images/hyunday.png"),
+                          type: "${provider.currentReservation?.etat}",
+                          text1: "${provider.closestVehicule?.matricule}",
+                          text2:
+                              "Identifiant: #${provider.currentReservation?.reservationId}"),
+                      const SizedBox(height: GacelaTheme.vDivider + 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          gacelaCard(
+                            color: GacelaColors.gacelaBlueGray,
+                            width: screenSize.width * 0.4,
+                            height: screenSize.width * 0.4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Center(
-                                    child: Icon(
-                                  Icons.lock_open,
-                                  size: 40,
-                                )),
-                                const SizedBox(height: GacelaTheme.vDivider),
+                                const Text(
+                                  "Estimation vers",
+                                  style: TextStyle(
+                                      color: GacelaColors.gacelaDeepBlue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      fontFamily: 'popins'),
+                                ),
                                 Text(
-                                  "La voiture est ouverte vous pouvez monter",
+                                  "${provider.destinationPlace?.name}",
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3!
-                                      .copyWith(
-                                        color: GacelaColors.gacelaGreen,
-                                      ),
                                 ),
-                              ],
-                            )
-                          : Column(
-                              children: [
-                                const Center(
-                                    child: Icon(
-                                  Icons.lock,
-                                  size: 40,
-                                )),
-                                const SizedBox(height: GacelaTheme.vDivider),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 2),
-                                  child: gacelaButton(
-                                    onPressed: _unlockDialog,
-                                    text: "Débloquer",
-                                    icon: const Icon(
-                                      Icons.lock_open_outlined,
-                                    ),
-                                    // IconData(0xe3b0, fontFamily: 'MaterialIcons'),
-                                    color: GacelaColors.gacelaDeepBlue,
-                                  ),
+                                Text(
+                                  "${provider.closestVehicule?.estimatedPrice?.toStringAsFixed(2)} DA",
+                                  textAlign: TextAlign.center,
                                 ),
                               ],
                             ),
-                    ),
-                  ],
+                          ),
+                          InkWell(
+                            onTap: () async => await Navigator.pushNamed(
+                                context, TrackCarScreen.route),
+                            child: gacelaCard(
+                              color: GacelaColors.gacelaDeepPink,
+                              width: screenSize.width * 0.4,
+                              height: screenSize.width * 0.4,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: Colors.red,
+                                    size: 35,
+                                  ),
+                                  SizedBox(height: GacelaTheme.vDivider - 4),
+                                  Text(
+                                    "suivre votre voiture",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: GacelaTheme.vDivider + 10),
+                      Consumer<CourseProvider>(builder: (context, provider, _) {
+                        if (!provider.isPayed) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            child: gacelaButton1(
+                              onPressed: provider.makePayment,
+                              text: "Payment",
+                              img: Image.asset(
+                                "assets/images/edahabia.png",
+                                height: 20,
+                                width: 60,
+                              ),
+                              color: GacelaColors.gacelaGrey,
+                            ),
+                          );
+                        } else {
+                          return Column(
+                            children: const [
+                              Text(
+                                "Your reservation is payed",
+                                style: TextStyle(
+                                  color: GacelaColors.gacelaGreen,
+                                ),
+                              ),
+                              Text(
+                                  "Our car is in way to you, remember to unlock the car")
+                            ],
+                          );
+                        }
+                      }),
+                      const SizedBox(height: GacelaTheme.vDivider + 10),
+                      Consumer<CourseProvider>(
+                        builder: (_, course, __) => course.isUnlocked
+                            ? Column(
+                                children: [
+                                  const Center(
+                                      child: Icon(
+                                    Icons.lock_open,
+                                    size: 40,
+                                  )),
+                                  const SizedBox(height: GacelaTheme.vDivider),
+                                  Text(
+                                    "La voiture est ouverte vous pouvez monter",
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline3!
+                                        .copyWith(
+                                          color: GacelaColors.gacelaGreen,
+                                        ),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  const Center(
+                                      child: Icon(
+                                    Icons.lock,
+                                    size: 40,
+                                  )),
+                                  const SizedBox(height: GacelaTheme.vDivider),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2),
+                                    child: gacelaButton(
+                                      onPressed: _unlockDialog,
+                                      text: "Débloquer",
+                                      icon: const Icon(
+                                        Icons.lock_open_outlined,
+                                      ),
+                                      // IconData(0xe3b0, fontFamily: 'MaterialIcons'),
+                                      color: GacelaColors.gacelaDeepBlue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            if (isLoading)
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.black.withOpacity(0.2),
-                  alignment: Alignment.center,
+              if (isLoading)
+                Positioned(
+                  top: 0,
+                  left: 0,
                   child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25)),
-                      child: const CircularProgressIndicator()),
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.black.withOpacity(0.2),
+                    alignment: Alignment.center,
+                    child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25)),
+                        child: const CircularProgressIndicator()),
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

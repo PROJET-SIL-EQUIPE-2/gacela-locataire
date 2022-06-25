@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gacela_locataire/providers/course_provider.dart';
 import 'package:provider/provider.dart';
 import '../../config/theme/colors.dart';
+import '../../providers/car_data_collector.dart';
 import 'navigators.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,13 +20,11 @@ class _MainScreenState extends State<MainScreen> {
   final _navigators = [
     const TransactionsNavigator(),
     const HomeNavigator(),
-    const SupportNavigator(),
   ];
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
     TransactionsNavigator.transactionsNavigatorKey,
     HomeNavigator.homeNavigatorKey,
-    SupportNavigator.supportNavigatorKey
   ];
 
   Future<bool> _systemBackButtonPressed() async {
@@ -53,6 +52,9 @@ class _MainScreenState extends State<MainScreen> {
         providers: [
           ChangeNotifierProvider<CourseProvider>(
             create: (context) => CourseProvider(),
+          ),
+          ChangeNotifierProvider<CarsDataCollector>(
+            create: (context) => CarsDataCollector(),
           ),
         ],
         child: Scaffold(
