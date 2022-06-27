@@ -17,16 +17,6 @@ class TrackCarScreen extends StatefulWidget {
 
 class _TrackCarScreenState extends State<TrackCarScreen> {
   @override
-  void initState() {
-    Provider.of<CarsDataCollector>(context, listen: false).connect(
-        Provider.of<AuthProvider>(context, listen: false).user?.id,
-        Provider.of<CourseProvider>(context, listen: false)
-            .currentReservation
-            ?.vehiculeId);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Consumer<CarsDataCollector>(
         builder: (context, carsDataCollector, _) {

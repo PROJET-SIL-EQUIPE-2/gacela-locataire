@@ -10,6 +10,8 @@ class CarsDataCollector with ChangeNotifier {
   double? long = 0;
   String? matricule;
 
+  bool finished = false;
+
   GoogleMapController? controller;
 
   void connect(int? locataireId, int? carId) {
@@ -44,6 +46,12 @@ class CarsDataCollector with ChangeNotifier {
         }
         notifyListeners();
       }
+    });
+
+    socket.on("finish", (data) {
+      finished = true;
+      print("finshed");
+      notifyListeners();
     });
   }
 

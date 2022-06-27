@@ -52,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
                 onBackgroundImageError: (_, __) =>
                     Image.asset('assets/images/placeholder-image.png'),
                 backgroundImage: NetworkImage(
-                  "${dotenv.get("SERVER")}/${(Provider.of<AuthProvider>(context, listen: false).user?.personalPhoto as String).replaceAll('\\', '/')}.png",
+                  "${dotenv.get("SERVER")}/${(Provider.of<AuthProvider>(context, listen: false).user?.personalPhoto as String).replaceAll('\\', '/')}",
                 ),
               ),
             ),
