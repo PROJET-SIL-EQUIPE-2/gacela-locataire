@@ -5,6 +5,7 @@ import 'package:gacela_locataire/providers/auth_provider.dart';
 import 'package:gacela_locataire/providers/car_data_collector.dart';
 import 'package:gacela_locataire/providers/course_provider.dart';
 import 'package:gacela_locataire/views/screens/auth/thanks_screen.dart';
+import 'package:gacela_locataire/views/screens/home/course/thanks_screen.dart';
 import 'package:gacela_locataire/views/screens/home/course/track_car_screen.dart';
 import 'package:gacela_locataire/views/screens/home/home_screen.dart';
 import 'package:gacela_locataire/views/screens/home/support/support_screen.dart';
@@ -36,7 +37,7 @@ class _CourseScreenState extends State<CourseScreen> {
       courseProvider.isUnlocked = false;
       courseProvider.isPayed = false;
 
-      await Navigator.pushReplacementNamed(context, ThanksScreen.route);
+      await Navigator.pushReplacementNamed(context, ThanksCourseScreen.route);
     }
   }
 
